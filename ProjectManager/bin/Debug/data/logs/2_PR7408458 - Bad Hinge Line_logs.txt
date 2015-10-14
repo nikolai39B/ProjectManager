@@ -1,0 +1,15 @@
+# Warning: Do not edit by hand
+#
+# LOG FILE
+#
+# Project: PR7408458 - Bad Hinge Line
+# Id: 2
+#
+# Format: id|start time|end time|description
+
+Complete
+5|9/21/2015 8:19:00 AM|9/21/2015 1:56:00 PM|Finish up PR
+4|9/18/2015 9:41:00 AM|9/18/2015 4:01:00 PM|Investigating Hinge Line
+3|9/17/2015 1:30:00 PM|9/17/2015 4:24:00 PM|Investigating UI files
+2|9/17/2015 8:31:00 AM|9/17/2015 12:01:00 PM|Continue investigation
+1|9/16/2015 1:35:00 PM|9/16/2015 4:30:00 PM|Begin investigation

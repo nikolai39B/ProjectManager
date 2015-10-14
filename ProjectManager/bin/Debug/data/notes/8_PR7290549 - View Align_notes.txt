@@ -1,0 +1,32 @@
+# Notes for Project PR7290549 - View Align
+
+** 10/7/2015 11:30:00 AM **
+
+http://www.cbr.ugs.com/cgi-bin/tac_pr.pl?form=faults.html&entry=7290549&employee=emp&closed=Open+Non-OQ&days=7+days&display=List&db=rpt7_tac%3A%3Aus_db
+
+D:\workdir\devunits\ad3vfw_PR7290549-ViewAlign\parts\pr_block.prt
+
+Steps to reproduce:
+1.  Launch NX
+2.  Open pr_block.prt
+3.  RMB on left view -> View Alignment -> Alignment -> Placement -> Method -> Horizontal -> Select "Top@5"
+4.  Click OK and notice that view not out of date
+5.  RMB on right view -> Edit -> View Origin -> Placement -> Method -> Horizontal -> Select "Top@5"
+6.  Click OK and notice that view is out of date
+
+** 10/9/2015 9:47:14 AM **
+
+Iyanna thinks that this behavior might be intended. However, the 'Hinge' option is missing from the View
+    Alignment dialog and he wants to know why. This has not always been the case.
+    
+DrawingUI_UICompViewPlacement.cxx
+
+** 10/13/2015 8:31:53 AM **
+
+DrawingUI_UICompViewPlacement.cxx @ lines 1794 - 1804 look relevant to this toggle being disabled.
+
+Testing this theory...
+Yes this seems to be the cause. Also, @ lines 1722 - 1726 is where it gets disabled by default.
+
+** 10/14/2015 2:41:18 PM **
+

@@ -1,0 +1,91 @@
+# Notes for Project PR6976138 - Proj View Reset
+
+** 09/23/2015 10:21 **
+
+http://www.cbr.ugs.com/cgi-bin/tac_pr.pl?form=faults.html&entry=6976138&employee=emp&closed=Open+Non-OQ&days=7+days&display=List&db=rpt7_tac%3A%3Aus_db
+
+D:\Scratch\basic_parts\block.prt
+
+Steps to reproduce:
+1.	Start NX
+2.	Open block.prt
+3.	Application -> Drafting
+4.	RMB on imported view "Top@1" and click "Add Projected View"
+5.	Hinge Line -> Vector Option -> Defined
+6.	Define the vector in any way
+7.	Hinge Line -> Vector Option -> Defined
+8.	Note that nothing changes; this is correct
+9.	RMB on sheet -> Vector Option -> Defined
+10.	Specify Vector resets; this is incorrect
+
+Loaded DrawingUI_UICompHingeLine.cxx,
+	   DrawingUI_UICompProjectedView.cxx
+	   Drawing_HingeLineBuilder.cxx
+	   Drawing_HingeLineData.cxx
+	   
+Potentially important functions (both in DrawingUI_UICompHingeLine.cxx):
+	ProcessVectorOptionChange()
+	ProcessSpecifyVectorChange()
+	
+When reselecting via the RMB menu, we hit ProcessVectorOptionChange(). We don't hit this when
+reselecting via the UI dialog.
+
+I'm trying to figure out where it sets new VectorOption. It doesn't do it in ProcessVectorOptionChange().
+
+Important callstack; this is where the enum value gets set:
+ 	libuifw.dll!UGS::UICOMP_enum::set_value(int value) Line 1660	C++
+ 	libuifw.dll!enum_pop_up_cb(int id, void * data, DYN_POP_data_s * callback_data) Line 3288	C++
+ 	libugui.dll!DYN_POP__dispatch_callback(DYN_POP_item_s * picked_popup_item) Line 996	C++
+ 	libugui.dll!UGS::UITools::DynPopBuilder::DynamicPopupCb(DYN_POP_item_s * item) Line 1155	C++
+ 	windowsui.dll!UGS::Error::Win32::ProtectedCallHelper3<void,AMX__action_s * __ptr64,void const * __ptr64,void * __ptr64>::operator()(AMX__action_s * a1, const void * a2, void * a3) Line 302	C++
+ 	windowsui.dll!value_changed_action_CB(CTbxmAction * pAction, const void * call_data, void * client_data) Line 1028	C++
+ 	ugtbxm.dll!CTbxmButtonAction::OnActionCallback(TbxmCallbackType nType) Line 179	C++
+
+Set a BP @ line 1660 of uicomp_enum_definitions.c (in the set_value() method)
+
+Modifying enum_pop_up_cb() @ line 3281 of uicomp_enum_definitions.c to this:
+	UICOMP_enum_p_t self = (UICOMP_enum_p_t) data;
+
+    // Only set if we actually change here
+    if (self->get_value() != id + self->min)
+    {
+        self->set_value(id + self->min);
+        self->changed((OM_object_p_t)self, UIFW_EVENT_changed);
+    }
+seems to solve the issue. This is pretty low-level though, so it's dangerous.
+
+
+ ** 9/30/2015 10:10:44 AM **
+
+I'm meeting with Scott Gundling @ 3:00 to discuss the issue.
+The summary of the issue (and how to reproduce) is this:
+1.	Open the block part and go to sheet 1
+2.	Click projected view and change vector option to defined
+3.	Define the vector
+4.	Reselect defined in the menu and notice that it doesn't reset the specify vector field
+5.	RMB on sheet and select Vector Option -> Defined and notice how it does reset the specify vector field
+6.	Go to DrawingUI_UICompHingeLine.cxx @ line 391 and notice the call to ProcessVectorOptionChange(). This
+		occurs only if the vector option has changed.
+7.	Go to DrawingUI_UICompHingeLine.cxx @ line 264 and notice the block that handles the vector option being
+		set to defined.
+8.	This block sets the specify vector field to NULL, but we don't want to do this if we didn't actually
+		change anything.
+9.	There doesn't seem to be a good way to tell this though, since it is just querying the vector option event
+		in update().
+10.	uicomp_enum_definitions.c method enum_pop_up_cb() @ line 3282 gets called when we reselect defined in the RMB menu
+11.	This method blindly logs a change even if it sets it to the same exact value.
+12.	As a result, DrawingUI_UICompHingeLine detects a change when there really wasn't one.
+
+What are the potential effects of such a change? I assume many things call this method, some of which may depend
+on that change flag getting set even if it doesn't actually change.
+
+Is there any way to notify the hinge line dialog specifically for this edge case?
+
+ ** 9/30/2015 3:18:02 PM **
+
+I spoke to Scott and he said that he thought the change was correct. I'm going to put it on a CP (NX374692).
+It's submit for review
+
+** 10/7/2015 1:13:39 PM **
+
+CP is submit and PR closed FN.

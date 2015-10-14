@@ -1,0 +1,300 @@
+# Notes for Project PR7408458 - Bad Hinge Line
+
+** 09/16/2015 13:35 **
+
+Reproduced the error (kind of). I followed the steps, and NX through and exception.
+I can't tell if it would close the dialog because I can't continue in VS.
+	Looks like there is some pointer/null issues in the code.
+
+Steps to reproduce:
+	Open "Original_Part_dwg1.prt"
+	Go to drafting
+	Launch projected view
+	Select SX@6 as parent view
+	Set vector option to defined
+	Launch specify vector dialog
+	Select Face/Plane Normal
+	Select face of base view
+	Hit OK
+	Select base view as parent view
+	Error message pops up (this is correct)
+	Dialog closes (not correct)
+
+Definitely an internal error message. It pops up if not in debug mode.	
+
+Set a BP on line 1185 of easytl_app_definitions.c to catch the flow of execution before it 'splodes.
+
+On line 1190 of easytl_app_definitions.c, we check cb_data->registry_id. However, in the PR circumstance,
+	cb_data is not a sensible value. It is quite possible that it has already been deleted somewhere else.
+
+On line 4604 in uifw_definitions.c is the call to mtDialogExtended(), which launches the dialog:
+	The response is -3
+	We go into the ERROR_FINALLY block
+	We go into each if block in this block
+	We then jump to ERROR_TOP_RECOVER on line 4750
+	On line 4766 we call report_error() whil launches the "Invalid hinge line." dialog
+	We enter the else block on line 5040
+	We are done, so we exit the big while loop and go to line 5085
+	We enter the if block on line 5115
+	We call commend->cancel() on line 5141
+	Down this call is where we have issues
+	
+The callstack (stopped at a BP right before the exception):
+ 	libugui.dll!UGS::EASYTL_app::update_registry() Line 1185	C++
+ 	libuicompfld.dll!UGS::PartUI::MultiColumnList::IntCleanUp(bool bHideWindow) Line 1903	C++
+ 	libuicompfld.dll!UGS::PartUI::MultiColumnList::CleanUp() Line 1887	C++
+ 	libuicomp_draw.dll!UGS::DrawingUI::UICompViewGlue::cascade_destroy() Line 383	C++
+ 	libsyss.dll!invoke_methods(UGS::OM::Object * object, bool unload) Line 541	C++
+ 	libsyss.dll!OM_delete_object(void * ptr) Line 217	C++
+ 	libsyss.dll!OM_delete_referenced_subobject(void * obj, const UGS::OM::AttributeId & att_id) Line 279	C++
+ 	libuifw.dll!UGS::UIFW_command::cancel(bool undo, bool delete_undo_mark) Line 1555	C++
+ 	libuifw.dll!UGS::UIFW::create_command(bool edit, bool undo, const char * class_name, UGS::OM::MethodicObject * component, void * initData) Line 5144	C++
+ 	libugui.dll!UIFW_create_command(const char * class_name, UGS::OM::MethodicObject * component, void * initData) Line 94	C++
+ 	libdrawint.dll!`anonymous namespace'::InsertProjectedView() Line 653	C++
+	
+We skip the call to command->cancel() when we exit normally.
+
+Investigating UIFW_command::cancel() and downwards:
+	We keep passing an object down the callstack
+	The object has class id (invoke_methods() in om_delete.c say so anyway)
+	In invoke_methods(), we enter the "if (OM_is_subclass(class_id, OM_methodic_object_c))" block
+	We call OM__invoke_destroy_method() on the object (which has been casted into an OM_methodic_object)
+	
+
+** 09/17/2015 08:31 **
+
+Set a BP @ om_delete.c line 534. It is the location of the call to OM__invoke_destroy_method():
+	Hits a total of 4 times before the error
+	
+First time:
+ 	libsyss.dll!invoke_methods(UGS::OM::Object * object, bool unload) Line 534	C++
+ 	libsyss.dll!OM_delete_object(void * ptr) Line 217	C++
+ 	libsyss.dll!OM_delete_referenced_subobject(void * obj, const UGS::OM::AttributeId & att_id) Line 279	C++
+ 	libuifw.dll!UGS::UIFW_command::cancel(bool undo, bool delete_undo_mark) Line 1548	C++
+ 	libuifw.dll!UGS::UIFW::create_command(bool edit, bool undo, const char * class_name, UGS::OM::MethodicObject * component, void * initData) Line 5144	C++
+ 	libugui.dll!UIFW_create_command(const char * class_name, UGS::OM::MethodicObject * component, void * initData) Line 94	C++
+	
+Second/third time:
+ 	libsyss.dll!invoke_methods(UGS::OM::Object * object, bool unload) Line 534	C++
+ 	libsyss.dll!OM_delete_object(void * ptr) Line 217	C++
+ 	libsyss.dll!OM__adjust_vla(UGS::OM::Attribute * att, int class_id, UGS::OM::Vla * vla, int start, int ndel, int nadd, int mode_flags) Line 738	C++
+ 	libsyss.dll!set_array_length(void * object, const UGS::OM::AttributeId & att_id, UGS::OM::Attribute * att_for_props, int new_length, int nsubscripts, const int * subscripts, int mode_flags, bool fireOnChanged) Line 1454	C++
+ 	libsyss.dll!OM_set_array_length(void * object, const UGS::OM::AttributeId & att_id, int new_length, int nsubscripts, const int * subscripts) Line 1496	C++
+ 	libsyss.dll!OM_vset_array_length(void * object, const UGS::OM::AttributeId & att_id, int length, int nsubscripts, ...) Line 1536	C++
+ 	libuifw.dll!UGS::UIFW_command::cancel(bool undo, bool delete_undo_mark) Line 1554	C++
+ 	libuifw.dll!UGS::UIFW::create_command(bool edit, bool undo, const char * class_name, UGS::OM::MethodicObject * component, void * initData) Line 5144	C++
+
+Fourth time:
+ 	libsyss.dll!invoke_methods(UGS::OM::Object * object, bool unload) Line 534	C++
+ 	libsyss.dll!OM_delete_object(void * ptr) Line 217	C++
+ 	libsyss.dll!OM_delete_referenced_subobject(void * obj, const UGS::OM::AttributeId & att_id) Line 279	C++
+	libuifw.dll!UGS::UIFW_command::cancel(bool undo, bool delete_undo_mark) Line 1555	C++
+ 	libuifw.dll!UGS::UIFW::create_command(bool edit, bool undo, const char * class_name, UGS::OM::MethodicObject * component, void * initData) Line 5144	C++
+
+Hightlights:
+1.	OM_delete_referenced_subobject() -> OM_delete_object()			THIS ONE IS THE HANDLE HINT
+2.	OM_vset_array_length() -> OM_set_array_length() -> set_array_length() -> OM__adjust_vla() -> OM_delete_object()
+3.	OM_delete_referenced_subobject() -> OM_delete_object()			THIS ONE IS THE COMPONENT
+
+Might be important:
+	PartUI_MultiColumnList.cxx line 2242 DestructorCallback()
+	The comments say that it clears m_tree, which is giving us issues in update_registry()
+	This never actually got called so idk
+	
+Looking at the PartUI tree:
+	SetTree() @ line 590 of PartUI_MultiColumnList_SchemaRegistrant.cxx
+	GetTree() @ line 2328 of PartUI_MultiColumnList.hxx
+
+Put a breakpoint @ DrawingUI_UICompProjectedView.cxx line 560 in update():
+	Went into BASE_CLASS::update(), which took me to DrawingUI_UICompViewGlue.cxx update()
+	Entered ConfigureDialog() on line 1992
+	Entered CreatePreviewObject() on line 2517
+	Entered builder->CreatePreviewObject() on line 5332
+	Entered CreatePreviewView() on line 1156 of Drawing_ViewGlueBuilder.cxx
+	Entered this->EditPreviewHingeLine() on line 448 of Drawing_ProjectedViewBuilder.cxx
+	Entered DMV_calc_matrix() on line 886
+		I'm going to stop here; I don't think I'm really heading in the right direction.
+		
+Looking into the dialog creation stuff now:
+	DLG_create_dialog() on line 1466 of dlg_main.c
+	open_next_dialog() on line 2003
+	gather_events() on line 3318
+	MainLoop() on line 1693 of EVTLoop.cpp
+	
+Interesting discovery:
+	Selecting the new parent view first and then the hinge line is graceful
+	Doing it this way causes it not to even enter DMV_calc_matrix()
+	DMV_calc_matrix() is the source of the ugly error
+	
+The Vector UI lives inside UI_Comp_VectorConstructor.cxx/.hxx
+Investigating on_apply() on line 307 of UI_Comp_VectorConstructor.cxx
+	
+Potentially important method: UICOMP_vector::LaunchVectorDialog() (@ line 984 of uicomp_vector_definitions.c)
+	Put BP on line 1039 of the file
+	
+
+** 09/18/2015 09:51 **
+	
+Check has to be somewhere above libuifw.dll!UGS::UIFW::update() Line 6540	C++
+
+Simply clicking on the face from the proj view dialog also works. You don't even have to go through the vector dialog.
+
+Code runs through ProcessSpecifyVectorChange() on line 326 of DrawingUI_UICompHingeLine.cxx
+
+Get the glue data:
+	Drawing::ViewGlueData glueData;
+	GetGlueData(glueData);
+
+Get the hinge line data:
+	Drawing::HingeLineData hingeLineData;
+	glueData.GetHingeLineData(hingeLineData);
+	
+Get the hinge line vector:
+	VEC2_t hingeLineVector = hingeLineData.ComputeHingeLineVectorOnDrawing();
+	
+Current change (starts @ line 1889 of DrawingUI_UICompViewGlue.cxx):
+	if (IsChanged(GetParentComponent()))
+	{
+		changedComponent = GetParentComponent();
+
+		// <Will Hauber> 18-Sept-2015 PR7408458
+		// Check the hinge line. We may have made it invalid after changing the parent view. 
+		Drawing::ViewGlueData glueData;
+		GetGlueData(glueData);
+		Drawing::HingeLineData hingeLineData;
+		glueData.GetHingeLineData(hingeLineData);
+		VEC2_t hingeLineVector = hingeLineData.ComputeHingeLineVectorOnDrawing();
+		if (hingeLineVector.IsZero(EQ_TOL_LENGTH))
+		{
+			// Display a warning message to the user            
+			const char* zeroVectorMessage = MSGTXT("Hinge line cannot be the Z-axis or zero length.");
+			this->ask_framework()->information(zeroVectorMessage, true);
+
+			// Reset the parent component so the user can fix the issue
+			static_cast<DrawingUI::UICompParentView*>(changedComponent)->SetView(NULL);
+
+
+			// <choudhac> o6-Feb-2014 PR6970555 set focus on m_specifyVector as user needs to respecify vector in this case.
+			//this->SetFocusOnSpecifyVector();
+			result = OM::UpdateResult::RESULT_NO_CHANGE;
+		}
+		else
+		{
+			ProcessParentChange();
+			result = OM::UpdateResult::RESULT_CHANGED;
+		}
+	}
+	
+The above change caused issues, so I modified it as such:
+	if (IsChanged(GetParentComponent()))
+	{
+		changedComponent = GetParentComponent();
+
+		// <Will Hauber> 18-Sept-2015 PR7408458
+		// Check the hinge line. We may have made it invalid after changing the parent view. 
+		Drawing::ViewGlueData glueData;
+		GetGlueData(glueData);
+		Drawing::HingeLineData hingeLineData;
+		glueData.GetHingeLineData(hingeLineData);
+		VEC2_t hingeLineVector = hingeLineData.ComputeHingeLineVectorOnDrawing();
+		if (hingeLineVector.IsZero(EQ_TOL_LENGTH))
+		{
+			// Display a warning message to the user            
+			const char* zeroVectorMessage = MSGTXT("Hinge line cannot be the Z-axis or zero length.");
+			this->ask_framework()->information(zeroVectorMessage, true);
+
+			// Reset the hinge line component so that the user can fix the issue.
+			// Ideally, we would instead revert the parent view.
+			DrawingUI::UICompHingeLine* hingeLineComponent = GetHingeLineComponent();
+			if (hingeLineComponent != NULL_TAG)
+			{
+				UICOMP_vector* specifyVectorComponent = hingeLineComponent->GetSpecifyVector();
+				specifyVectorComponent->set_vector_tag(NULL_TAG);
+
+				// Set the focus on this component as well
+				hingeLineComponent->SetFocusOnSpecifyVector();
+			}
+			result = OM::UpdateResult::RESULT_NO_CHANGE;
+		}
+		else
+		{
+			ProcessParentChange();
+			result = OM::UpdateResult::RESULT_CHANGED;
+		}
+	}
+
+** 09/21/2015 08:20 **
+
+The final change is in DrawingUI_UICompProjectedView.cxx. I removed the changes to DrawingUI_UICompViewGlue.cxx
+It starts @ line 1045 in the ProcessParentChange() method:
+	// <Will Hauber> 18-Sept-2015 PR7408458
+    // Check the hinge line. We may have made it invalid after changing the parent view. 
+    Drawing::ViewGlueData glueData;
+    GetGlueData(glueData);
+    Drawing::HingeLineData hingeLineData;
+    glueData.GetHingeLineData(hingeLineData);
+    VEC2_t hingeLineVector = hingeLineData.ComputeHingeLineVectorOnDrawing();
+    if (hingeLineVector.IsZero(EQ_TOL_LENGTH))
+    {
+        // Display a warning message to the user            
+        const char* zeroVectorMessage = MSGTXT("Hinge line cannot be the Z-axis or zero length.");
+        this->ask_framework()->information(zeroVectorMessage, true);
+
+        // Reset the hinge line vector so that the user can fix the issue
+        DrawingUI::UICompHingeLine* hingeLineComponent = GetHingeLineComponent();
+        if (hingeLineComponent != NULL_TAG)
+        {
+            UGS::UICOMP_vector* specifyVectorComponent = hingeLineComponent->GetSpecifyVector();
+            specifyVectorComponent->set_vector_tag(NULL_TAG);
+
+            // Set the focus on this component as well
+            hingeLineComponent->SetFocusOnSpecifyVector();
+        }
+    }
+	
+This change seems to solve the problem, though the specify vector component is not getting focus correctly.
+
+Added this->ask_framework()->focus(hingeLineComponent); right before setting the focus on specify vector
+	This didn't work
+	
+Finally got the focus to work. I needed to set it after the call to BASE_CLASS::ProcessParentChange(); or it
+would get overridden. So I added a flag "setFocusToHingeLine" at the beginning of my change and then set it to
+true if necessary. Then I added this condition immediately after the call to BASE_CLASS::ProcessParentChange();
+	BASE_CLASS::ProcessParentChange();
+
+    // <Will Hauber> 21-Sep-2015 PR7408458
+    // Here we set the focus to the specify vector component in the hinge line component.
+    // If we do it before the call to BASE_CLASS::ProcessParentChange(); then it gets overridden.
+    if (setFocusToHingeLine)
+    {
+        GetHingeLineComponent()->SetFocusOnSpecifyVector();
+    }
+
+I'm going to try and determine why my change worked now.
+I put a BP @ dmv_create.c line 2813 right before the error gets raised. This is with my change commented out:
+ 	libdraw.dll!DMV_calc_matrix(unsigned int parent, unsigned int view, double * hinge_line, double * direction_data, int view_type, double * new_matrix) Line 2814	C++
+ 	libdraw.dll!UGS::Drawing::ProjectedViewBuilder::EditPreviewHingeLine(const UGS::Drawing::ViewGlueData & glueData) Line 886	C++
+ 	libdraw.dll!UGS::Drawing::ProjectedViewBuilder::CreatePreviewView(const UGS::Drawing::ViewGlueData & glueData) Line 450	C++
+ 	libdraw.dll!UGS::Drawing::ViewGlueBuilder::CreatePreviewObject(const UGS::Drawing::ViewGlueData & glueData) Line 1156	C++
+ 	libuicomp_draw.dll!UGS::DrawingUI::UICompViewGlue::CreatePreviewObject() Line 5332	C++
+ 	libuicomp_draw.dll!UGS::DrawingUI::UICompViewGlue::ConfigureDialog() Line 2517	C++
+ 	libuicomp_draw.dll!UGS::DrawingUI::UICompViewGlue::update() Line 2000	C++
+ 	libuicomp_draw.dll!UGS::DrawingUI::UICompProjectedView::update() Line 571	C++
+ 	libuifw.dll!UGS::UIFW::update() Line 6540	C++
+Weirdly, this doesn't go down the BASE_CLASS::ProcessParentChange(); call, but putting my change right after this call
+caused issues. Hmm.
+
+Manually following down the call to BASE_CLASS::ProcessParentChange(); (without my changes):
+	Enter ProcessParentChange() in DrawingUI_UICompProjectedView.cxx line 3428
+	Do all Update__FromParentView()
+	Do ProcessHingeLineChange()
+	
+Manually following down the call to BASE_CLASS::ProcessParentChange(); (wit my changes):
+	Enter ProcessParentChange() in DrawingUI_UICompProjectedView.cxx line 3428
+	Do all Update__FromParentView()
+	Do ProcessHingeLineChange()
+	
+Hmm. Doesn't seem to make a difference here
+If we put the call after BASE_CLASS::ProcessParentChange(), then hingeLineData.ComputeHingeLineVectorOnDrawing()
+returns a non-zero vector, so we never go into the condition.
+	

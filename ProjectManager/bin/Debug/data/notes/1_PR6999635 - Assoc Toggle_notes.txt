@@ -1,0 +1,44 @@
+# Notes for Project PR6999635 - Assoc Toggle
+
+** 09/23/2015 14:37 **
+
+http://www.cbr.ugs.com/cgi-bin/tac_pr.pl?form=faults.html&entry=6999635&employee=emp&closed=Open+Non-OQ&days=7+days&display=List&db=rpt7_tac%3A%3Aus_db
+
+D:\Scratch\basic_parts\block.prt
+
+Steps to reproduce:
+1.	Open NX
+2.	Open block.prt
+3.	Create new sheet
+4.	Base View -> Settings -> Settings -> Common -> Configuration -> turn Snapshot on
+5.	OK -> Place the view
+6.	Projected View dialog -> Hinge Line -> Associative sensitive (should not be)
+
+DrawingUI_UICompHingeLine.cxx dialog_post_constructor() is probably relevant (@ line 164)
+
+DrawingUI_UICompEditViewSettings.cxx is also probably relevant.
+
+Put a watch for ((viewStyleData).prefs).snapshot_toggle_data
+	Put a BP @ line 1119 of DrawingUI_UICompEditViewSettings.cxx
+	
+Need to figure out a way to query the view settings given its tag
+	Perhaps look at CP NX334976 for ideas for this.
+
+VIEW_ask_snapshot_view(), which lives in view_draft_access.c, might do what I want here.
+	Yup, this totally seems to work.
+
+** 10/1/2015 2:02:57 PM **
+
+Iyanna said to go ahead and put it on a CP, but wait for him to talk to Kirk about it.
+The CP is NX375839.
+
+** 10/2/2015 11:06:03 AM **
+
+Iyanna stopped by to comment on it and try a related case.
+
+Also, there seems to be a bug where even if the projected view is not marked associative, it still
+goes out of date / changes when updated if the parent view is rotated.
+
+** 10/7/2015 1:25:41 PM **
+
+CP submit and PR closed FN.

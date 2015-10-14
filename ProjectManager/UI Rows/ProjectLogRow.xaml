@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="ProjectManager.ProjectLogRow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" >
+    <Grid Margin="0 0 0 3">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.2*"/>
+            <ColumnDefinition Width="0.62*"/>
+            <ColumnDefinition Width="0.18*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Column="0" HorizontalAlignment="Center" Name="tbl_Date" Text="Date" />
+        <TextBlock Grid.Column="1" Name="tbl_Description" Text="Description" />
+        <Button Click="b_View_Click" Content="View" Grid.Column="2" Name="b_View" Width="70" />
+    </Grid>
+</UserControl>

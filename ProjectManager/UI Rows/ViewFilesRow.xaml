@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="ProjectManager.ViewFilesRow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d">
+    <Grid Margin="0 0 0 3">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.6*"/>
+            <ColumnDefinition Width="0.2*"/>
+            <ColumnDefinition Width="0.2*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Column="0" Name="tbl_Filename" Text="Filename" />
+        <Button Click="b_Details_Click" Grid.Column="1" Name="b_Details" Content="Details" Width="70" />
+        <Button Click="b_Open_Click" Grid.Column="2" Name="b_Open" Content="Open" Width="70" />
+    </Grid>
+</UserControl>

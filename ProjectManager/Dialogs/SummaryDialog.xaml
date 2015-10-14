@@ -1,0 +1,23 @@
+﻿<Window x:Class="ProjectManager.SummaryDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:c="clr-namespace:ProjectManager"
+        Background="#000016" ResizeMode="CanMinimize"
+        Title="Summary" Width="500" SizeToContent="Height" 
+        Icon="C:\Users\ad3vfw\Documents\ProjectManager\ProjectManager\ProjectManager\pm_icon.ico">
+    <StackPanel>
+        <!-- Title -->
+        <TextBlock Margin="0 5 0 10" Name="tbl_Title" Style="{StaticResource tbl_HeaderSmall}" Text="Summary"/>
+
+        <!-- Items -->
+        <ScrollViewer Margin="0 0 3 10" Height="160">
+            <StackPanel Margin="5 0" Name="sp_Entries" />
+        </ScrollViewer>
+
+        <!-- Total -->
+        <StackPanel Margin="5 0 25 10" Name="sp_Total" />
+
+        <!-- Button -->
+        <Button Click="b_Ok_Click" Content="Ok" IsDefault="True" Name="b_Ok" Margin="0 0 0 10" Width="70"/>
+    </StackPanel>
+</Window>

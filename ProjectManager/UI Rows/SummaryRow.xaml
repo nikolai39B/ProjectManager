@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="ProjectManager.SummaryRow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" >
+    <Grid Margin="0 0 0 3">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.70*"/>
+            <ColumnDefinition Width="0.18*"/>
+            <ColumnDefinition Width="0.12*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Column="0" Name="tbl_Name" Text="Item 1" />
+        <TextBlock Grid.Column="1" HorizontalAlignment="Right" Name="tbl_Hours" Text="9999 hr" />
+        <TextBlock Grid.Column="2" HorizontalAlignment="Right" Name="tbl_Minutes" Text="9999 min" />
+    </Grid>
+</UserControl>

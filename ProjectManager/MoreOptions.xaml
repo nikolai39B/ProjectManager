@@ -1,0 +1,42 @@
+﻿<UserControl x:Class="ProjectManager.MoreOptions"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d">
+    <StackPanel>
+        <!-- Title -->
+        <TextBlock Margin="0 5 0 10" Style="{StaticResource tbl_Header}" Text="More Options"/>
+
+        <!-- Contents -->
+        <StackPanel Height="205" Margin="0 0 0 15">
+            <TextBlock Margin="0 0 0 5" Name="tbl_Title" Style="{StaticResource tbl_HeaderSmall}" Text="Sorting" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.25*" />
+                    <ColumnDefinition Width="0.25*" />
+                    <ColumnDefinition Width="0.25*" />
+                    <ColumnDefinition Width="0.25*" />
+                </Grid.ColumnDefinitions>
+                <RadioButton Grid.Column="0" HorizontalAlignment="Center" IsChecked="True" Name="rb_IdLow" Content="Id (Low)" />
+                <RadioButton Grid.Column="1" HorizontalAlignment="Center" Name="rb_IdHigh" Content="Id (High)" />
+                <RadioButton Grid.Column="2" HorizontalAlignment="Center" Name="rb_NameAToZ" Content="Name (A to Z)" />
+                <RadioButton Grid.Column="3" HorizontalAlignment="Center" Name="rb_NameZToA" Content="Name (Z to A)" />
+            </Grid>
+        </StackPanel>
+
+        <!-- Utility Buttons -->
+        <Grid Margin="0 0 0 15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.25*"/>
+                <ColumnDefinition Width="0.25*"/>
+                <ColumnDefinition Width="0.25*"/>
+                <ColumnDefinition Width="0.25*"/>
+            </Grid.ColumnDefinitions>
+            <Button Click="b_OpenNotes_Click" Content="Open Notes" Grid.Column="0" Name="b_OpenNotes" Width="100" />
+            <Button Click="b_Defaults_Click" Content="Defaults" Grid.Column="1" Name="b_Defaults" Width="100" />
+            <Button Click="b_ClearProjects_Click" Content="Clear Projects" Grid.Column="2" Name="b_ClearProjects" Width="100" />
+            <Button Click="b_Back_Click" Content="Back" Grid.Column="3" Name="b_Back" Width="100" />
+        </Grid>
+    </StackPanel>
+</UserControl>

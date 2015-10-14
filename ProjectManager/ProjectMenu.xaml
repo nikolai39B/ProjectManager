@@ -1,0 +1,90 @@
+﻿<UserControl x:Class="ProjectManager.ProjectMenu"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d">
+    <StackPanel>
+        <!-- Title and Change Name Button -->
+        <!-- Note: Background must be transparent for mouse events to work correctly -->
+        <Grid Background="Transparent" MouseEnter="g_Title_MouseEnter" MouseLeave="g_Title_MouseLeave" Name="g_Title">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Margin="0 5 0 15" Name="tbl_Title" Style="{StaticResource tbl_Header}" Text="Project Title"/>
+            <Button Click="b_EditName_Click" Content="Edit Name" Grid.Column="1" Margin="5 0" Name="b_EditName" Width="70" />
+        </Grid>
+
+        <!-- Incomplete Entry / Add File -->
+        <Grid Margin="0 0 0 15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.8*" />
+                <ColumnDefinition Width="0.2*" />
+            </Grid.ColumnDefinitions>
+
+            <!--
+                This bar has a lot of stuff going on. Specifically, it manages adding logs, adding files,
+                and switching between log and file views. sp_LogBarItems and b_Files should always be visible together
+                and b_AddFile and b_Logs should always be visible together. In addition, only one item inside sp_LogBarItems
+                should be visible at a time. The default is sp_LogBarItems, b_NewLog, and b_Files are visible, and everything
+                else is collapsed.
+            -->
+
+            <!-- Add Log -->
+            <StackPanel Grid.Column="0" Name="sp_LogBarItems">
+                <!-- New Log -->
+                <Button Click="b_NewLog_Click" Content="New Log" Grid.Column="0" Name="b_NewLog" Width="70" />
+
+                <!-- Finish Log -->
+                <Grid Grid.Column="0" Name="g_FinishEntry" Visibility="Collapsed">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.2*" />
+                        <ColumnDefinition Width="0.6*" />
+                        <ColumnDefinition Width="0.2*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock HorizontalAlignment="Center" Name="tbl_IncompleteLogDate" Grid.Column="0" Text="Log Date" />
+                    <TextBlock Name="tbl_IncompleteLogDescription" Grid.Column="1" Text="Log Description" />
+                    <Button Click="b_FinishLog_Click" Content="Finish Log" Grid.Column="2" Name="b_FinishLog" Width="70" />
+                </Grid>
+            </StackPanel>
+
+            <!-- Add File -->
+            <Button Click="b_AddFile_Click" Content="Add File" Grid.Column="0" Name="b_AddFile" Visibility="Collapsed" Width="70" />
+
+            <!-- Files -->
+            <Button Click="b_Files_Click" Content="Files" Grid.Column="1" Name="b_Files" Width="70" />
+
+            <!-- Logs -->
+            <Button Click="b_Logs_Click" Content="Logs" Grid.Column="1" Name="b_Logs" Width="70" Visibility="Collapsed" />
+        </Grid>
+
+        <!-- Projects -->
+        <ScrollViewer Margin="0 0 3 15" Height="160">
+            <!--
+                Only one item inside sp_ContentContainer should be visible at a time (the
+                other should be collapsed. Furthermore, this should be in sync with the
+                bar above.
+            -->
+            <StackPanel Name="sp_ContentContainer">
+                <StackPanel Margin="5 0" Name="sp_Logs" />
+                <StackPanel Margin="5 0" Name="sp_Files" Visibility="Collapsed"/>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Utility Buttons -->
+        <Grid Margin="0 0 0 15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.25*"/>
+                <ColumnDefinition Width="0.25*"/>
+                <ColumnDefinition Width="0.25*"/>
+                <ColumnDefinition Width="0.25*"/>
+            </Grid.ColumnDefinitions>
+            <Button Click="b_OpenNotes_Click" Content="Open Notes" Grid.Column="0" Name="b_OpenNotes" Width="100" />
+            <Button Click="b_Summary_Click" Content="Summary" Grid.Column="1" Name="b_Summary" Width="100" />
+            <Button Click="b_DeleteProject_Click" Content="Delete Project" Grid.Column="2" Name="b_DeleteProject" Width="100" />
+            <Button Click="b_Back_Click" Content="Back" Grid.Column="3" Name="b_Back" Width="100" />
+        </Grid>
+            
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,83 @@
+﻿<Window x:Class="ProjectManager.AddFileDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Background="#000016" ResizeMode="CanMinimize"
+        Title="Add File" Width="300" SizeToContent="Height" 
+        Icon="C:\Users\ad3vfw\Documents\ProjectManager\ProjectManager\ProjectManager\pm_icon.ico"
+        FocusManager.FocusedElement="{Binding ElementName=tb_FileTitle}">
+    <StackPanel>
+        <!-- Title -->
+        <TextBlock Margin="0 5 0 10" Name="tbl_Title" Style="{StaticResource tbl_HeaderSmall}" Text="Add File" />
+
+        <!-- File Title -->
+        <Grid Margin="10 0 10 10" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Margin="0 0 10 0" Text="Title:" />
+            <TextBox Grid.Column="1" HorizontalAlignment="Stretch" Name="tb_FileTitle" />
+        </Grid>
+
+        <!-- File Type -->
+        <Grid Margin="0 0 0 10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.25*" />
+                <ColumnDefinition Width="0.25*" />
+                <ColumnDefinition Width="0.5*" />
+            </Grid.ColumnDefinitions>
+
+            <RadioButton Click="rb_File_Click" Grid.Column="0" HorizontalAlignment="Center" IsChecked="True" Name="rb_File" Content="File" />
+            <RadioButton Click="rb_Url_Click"  Grid.Column="1" HorizontalAlignment="Center" Name="rb_Url" Content="Url" />
+            <CheckBox Click="cb_OpenWithDefault_Click" Grid.Column="2" HorizontalAlignment="Center" IsChecked="True" Name="cb_OpenWithDefault" Content="Open with Default" />
+        </Grid>
+
+        <!-- Filename -->
+        <StackPanel Margin="10 0 10 10" Name="sp_Filename" Orientation="Horizontal">
+            <Button Click="b_BrowseForFile_Click" Content="Browse" Margin="0 0 10 0" Name="b_BrowseForFile" Width="70"/>
+            <TextBlock Name="tbl_Filename" Text="File to open..." />
+        </StackPanel>
+
+        <!-- Url -->
+        <Grid Height="25" Margin="10 0 10 10" Name="g_Url" Visibility="Collapsed" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Margin="0 0 10 0" Text="Url:" />
+            <TextBox Grid.Column="1" Name="tb_Url" VerticalAlignment="Center" />
+        </Grid>
+
+        <!-- Program to Open -->
+        <StackPanel Margin="10 0 10 10" Name="sp_ProgramToOpen" Orientation="Horizontal" Visibility="Collapsed">
+            <Button Click="b_BrowseForProgramToOpen_Click" Content="Browse" Margin="0 0 10 0" Name="b_BrowseForProgramToOpen" Width="70"/>
+            <TextBlock Name="tbl_ProgramToOpen" Text="Open with..." />
+        </StackPanel>
+
+        <!-- Error Message -->
+        <TextBlock Name="tbl_ErrorMessage" Margin="10 0 10 10" Style="{StaticResource tbl_Error}" Text="Unknown error occurred."
+         TextWrapping="Wrap" Visibility="Collapsed" />
+
+        <!-- Buttons -->
+        <Grid Margin="0 0 0 10" Name="g_AddButtons">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.5*" />
+                <ColumnDefinition Width="0.5*" />
+            </Grid.ColumnDefinitions>
+            <Button Click="b_Add_Click" Content="Add" Grid.Column="0" IsDefault="True" Name="b_Add" Width="70"/>
+            <Button Click="b_Cancel_Click" Content="Cancel" Grid.Column="1" IsCancel="True" Name="b_Cancel_Add" Width="70"/>
+        </Grid>
+
+        <!-- Buttons -->
+        <Grid Margin="0 0 0 10" Name="g_EditButtons" Visibility="Collapsed">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.33*" />
+                <ColumnDefinition Width="0.33*" />
+                <ColumnDefinition Width="0.33*" />
+            </Grid.ColumnDefinitions>
+            <Button Click="b_Save_Click" Content="Save" Grid.Column="0" IsDefault="True" Name="b_Save" Width="70"/>
+            <Button Click="b_Delete_Click" Content="Delete" Grid.Column="1" IsDefault="True" Name="b_Delete" Width="70"/>
+            <Button Click="b_Cancel_Click" Content="Cancel" Grid.Column="2" IsCancel="True" Name="b_Cancel_Edit" Width="70"/>
+        </Grid>
+    </StackPanel>
+</Window>

@@ -1,0 +1,29 @@
+﻿<Window x:Class="ProjectManager.NewLogDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Background="#000016" ResizeMode="CanMinimize"
+        Title="New Log" Width="300" SizeToContent="Height" 
+        Icon="C:\Users\ad3vfw\Documents\ProjectManager\ProjectManager\ProjectManager\pm_icon.ico"
+        FocusManager.FocusedElement="{Binding ElementName=tb_LogDescription}">
+    <StackPanel>
+        <!-- Title -->
+        <TextBlock Margin="0 5 0 10" Style="{StaticResource tbl_HeaderSmall}" Text="New Log Description" />
+
+        <!-- Log Description TextBox -->
+        <TextBox Height="72" Name="tb_LogDescription" Margin="10 0 10 10" TextWrapping="Wrap" />
+
+        <!-- Error Message -->
+        <TextBlock Name="tbl_ErrorMessage" Margin="10 0 10 10" Style="{StaticResource tbl_Error}" Text="Unknown error occurred."
+         TextWrapping="Wrap" Visibility="Collapsed" />
+
+        <!-- Buttons -->
+        <Grid Margin="0 0 0 10" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.5*" />
+                <ColumnDefinition Width="0.5*" />
+            </Grid.ColumnDefinitions>
+            <Button Click="b_Create_Click" Content="Create" Grid.Column="0" IsDefault="True" Name="b_Create" Width="70"/>
+            <Button Click="b_Cancel_Click" Content="Cancel" Grid.Column="1" IsCancel="True" Name="b_Cancel" Width="70"/>
+        </Grid>
+    </StackPanel>
+</Window>

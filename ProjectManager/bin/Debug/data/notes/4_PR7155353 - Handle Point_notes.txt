@@ -1,0 +1,57 @@
+# Notes for Project PR7155353 - Handle Point
+
+ ** 10/1/2015 1:26:42 PM **
+
+http://www.cbr.ugs.com/cgi-bin/tac_pr.pl?form=faults.html&entry=7155353&employee=emp&closed=Open+Non-OQ&days=7+days&display=List&db=rpt7_tac%3A%3Aus_db
+
+D:\Scratch\PR7155353\Flange_with_revolved_section.prt
+
+Steps to reproduce:
+1.	Launch NX
+2.	Open Flange_with_revolved_section.prt
+3.	Insert a new sheet
+4.	Launch the base view dialog
+5.	Model View -> Model View to Use -> Front
+6.	Place the view
+7.	Projected View dialog -> Hinge Line -> Vector Option -> Defined
+8.	Hinge Line -> Specify Vector -> On Curve Vector
+9.	Menu Bar -> Curve Rule -> Single Curve
+10.	Select the longish line at about 4 o'clock on the base view
+11.	Place the view
+12. Close the dialog
+13.	RMB on the projected view -> Edit
+14.	Notice the handle point is at the bottom right of the sheet
+
+The handle point gets created AFTER dialog_post_constructor() in DrawingUI_UICompProjectedView.cxx
+
+Part with steps 3 - 12 already completed:
+	D:\workdir\devunits\ad3vfw_PR7155353-HandlePoint\parts\Flange_with_revolved_section_edit.prt
+	
+UI_Comp_VectorConstructor.cxx and UI_Comp_VectorOnPathDim.cxx also potentially important
+
+** 10/5/2015 11:16:55 AM **
+
+uicomp_on_path_dim_definitions.c might also be relevant
+
+** 10/6/2015 4:42:30 PM **
+
+D:\workdir\devunits\ad3vfw_PR7155353-HandlePoint\parts\disc_with_edge.prt
+
+This is a simpler part that also demonstrates the error.
+
+SetOrigin() and GetOrigin() in DrawingUI_UICompHingeLine.cxx might be relevant.
+
+Moving the handle point in NX does cause UICompHingeLine::update() to get called.
+	It enters the "else if ( ask_event(m_specifyVector) != UIFW_EVENT_none )" block
+
+** 10/7/2015 10:30:00 AM **
+
+definedVectorTag	- 44991 (direction)
+parentViewTag		- 41720 (view base)
+
+GetDefinedHingeLine() in Drawing_HingeLineBuilder.cxx queries the HingeLineData.
+
+See where -226.7, -146.9, 15.0 is.
+Then go 0.9872, 0.1595, 0.0000. This angle is tan(0.1595 / 0.9872) = 9.34.
+
+This didn't reveal anything useful.

@@ -1,0 +1,13 @@
+# Warning: Do not edit by hand
+#
+# LOG FILE
+#
+# Project: PR6976138 - Proj View Reset
+# Id: 0
+#
+# Format: id|start time|end time|description
+
+Complete
+3|9/30/2015 3:17:59 PM|9/30/2015 3:40:44 PM|Submit CP for review
+2|9/30/2015 10:10:32 AM|9/30/2015 11:43:31 AM|Reviewing for meeting
+1|9/23/2015 10:21:00 AM|9/23/2015 12:00:00 PM|Begin investigation
