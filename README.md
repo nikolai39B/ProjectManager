@@ -1,2 +1,2 @@
-# project_manager
+# ProjectManager
 Source code and binaries for Project Manager
