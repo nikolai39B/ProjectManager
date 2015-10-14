@@ -1,9 +1,0 @@
-# Warning: Do not edit by hand
-#
-# FILES FILE
-#
-# Project: PR6976138 - Proj View Reset
-# Id: 0
-#
-# Format: file title|file|is file flag|program to open
-

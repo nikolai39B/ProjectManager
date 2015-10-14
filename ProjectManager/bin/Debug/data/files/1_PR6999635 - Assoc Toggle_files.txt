@@ -1,9 +1,0 @@
-# Warning: Do not edit by hand
-#
-# FILES FILE
-#
-# Project: PR6999635 - Assoc Toggle
-# Id: 1
-#
-# Format: file title|file|is file flag|program to open
-
