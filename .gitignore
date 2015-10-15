@@ -2,7 +2,7 @@
 ProjectManager/bin/Debug/data
 
 # Don't copy launch bat
-#ProjectManager/bin/Debug/launchManager.bat
+ProjectManager/bin/Debug/launchManager.bat
 
 # Don't copy obj
 ProjectManager/obj
