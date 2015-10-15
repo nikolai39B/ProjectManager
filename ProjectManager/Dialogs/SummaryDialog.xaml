@@ -4,7 +4,7 @@
         xmlns:c="clr-namespace:ProjectManager"
         Background="#000016" ResizeMode="CanMinimize"
         Title="Summary" Width="500" SizeToContent="Height" 
-        Icon="C:\Users\ad3vfw\Documents\ProjectManager\ProjectManager\ProjectManager\pm_icon.ico">
+        Icon="../pm_icon.ico">
     <StackPanel>
         <!-- Title -->
         <TextBlock Margin="0 5 0 10" Name="tbl_Title" Style="{StaticResource tbl_HeaderSmall}" Text="Summary"/>

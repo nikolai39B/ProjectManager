@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\Users\ad3vfw\Documents\ProjectManager\ProjectManager\ProjectManager\obj\Debug\
+C:\Users\Will Hauber\Documents\Visual Studio 2015\Projects\ProjectManager\ProjectManager\ProjectManager\obj\Debug\
 ProjectManager
 none
 false
 DEBUG;TRACE
-C:\Users\ad3vfw\Documents\ProjectManager\ProjectManager\ProjectManager\App.xaml
+C:\Users\Will Hauber\Documents\Visual Studio 2015\Projects\ProjectManager\ProjectManager\ProjectManager\App.xaml
 151834400362
 
 261337349389
-20-572541141
+20-1407193391
 MoreOptions.xaml;UI Rows\ProjectFileRow.xaml;Dialogs\AddFileDialog.xaml;Dialogs\ConfirmationDialog.xaml;Home.xaml;UI Rows\HomeProjectRow.xaml;MainWindow.xaml;Dialogs\NewLogDialog.xaml;Dialogs\NewProjectDialog.xaml;UI Rows\ProjectLogRow.xaml;ProjectMenu.xaml;Dialogs\SummaryDialog.xaml;UI Rows\SummaryRow.xaml;UI Rows\ViewFilesRow.xaml;Dialogs\ViewLogDialog.xaml;
 
 False

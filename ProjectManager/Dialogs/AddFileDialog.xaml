@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Background="#000016" ResizeMode="CanMinimize"
         Title="Add File" Width="300" SizeToContent="Height" 
-        Icon="C:\Users\ad3vfw\Documents\ProjectManager\ProjectManager\ProjectManager\pm_icon.ico"
+        Icon="../pm_icon.ico"
         FocusManager.FocusedElement="{Binding ElementName=tb_FileTitle}">
     <StackPanel>
         <!-- Title -->
