@@ -1,2 +1,5 @@
 # Don't copy user data
 ProjectManager/bin/Debug/data
+
+# Don't copy obj
+ProjectManager/obj
