@@ -1,8 +1,11 @@
-# Don't copy user data
+# User data
 ProjectManager/bin/Debug/data
 
-# Don't copy bat
+# Launcher bat (requires hardcoded info)
 ProjectManager/bin/Debug/launchManager.bat
 
-# Don't copy obj
+# Object files
 ProjectManager/obj
+
+# Solution User Options
+*.suo
