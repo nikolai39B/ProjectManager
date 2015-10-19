@@ -17,7 +17,11 @@ namespace ProjectManager
 
             // Get the full path for all files
             string currDirectory = Environment.CurrentDirectory;
+
             allProjectsFilename = Path.Combine(currDirectory, allProjectsFilename);
+            allProjectsNotesFilename = Path.Combine(currDirectory, allProjectsNotesFilename);
+            settingsFilename = Path.Combine(currDirectory, settingsFilename);
+
             projectLogsFilename = Path.Combine(currDirectory, projectLogsFilename);
             projectNotesFilename = Path.Combine(currDirectory, projectNotesFilename);
             projectFilesFilename = Path.Combine(currDirectory, projectFilesFilename);
@@ -32,10 +36,19 @@ namespace ProjectManager
                 }
             }
 
-            // Make sure the projects file exists. Create it if necessary.
-            if (!File.Exists(allProjectsFilename))
-            {
-                File.WriteAllText(allProjectsFilename, allProjectsFileTemplate);
+            // Make sure the projects file, notes file, and settings file exist. Create if necessary.
+            Dictionary<string, string> fileTemplatePairs = new Dictionary<string, string> 
+            { 
+                { allProjectsFilename, allProjectsFileTemplate },
+                { allProjectsNotesFilename, allProjectsNotesFileTemplate },
+                { settingsFilename, settingsFileTemplate } 
+            };
+            foreach (var file in fileTemplatePairs)
+            { 
+                if (!File.Exists(file.Key))
+                {
+                    File.WriteAllText(file.Key, file.Value);
+                }
             }
         }
 
@@ -103,6 +116,45 @@ namespace ProjectManager
             }
 
             return projects;
+        }
+
+        /// <summary>
+        /// Parses the settings file and returns a dictionary containing the settings and their values.
+        /// The caller will need to parse the strings.
+        /// </summary>
+        /// <returns>The dictionary of settings.</returns>
+        public static Dictionary<string, string> GetAllSettingsFromFile()
+        {
+            Dictionary<string, string> settings = new Dictionary<string, string>();
+
+            // Get the non-empty and non-comment lines from the projects file
+            List<string> settingsRows = GetNonEmptyAndNonCommentLinesFromFile(settingsFilename);
+
+            // Parse the remaining lines
+            foreach (var line in settingsRows)
+            {
+                // Ensure that the line has the correct format
+                string[] lineItems = line.Split('|');
+                int numberOfItems = 2;
+                if (lineItems.Length != numberOfItems)
+                {
+                    ErrorLogger.AddLog(string.Format("Could not parse line '{0}'. Skipping entry.", line));
+                    continue;
+                }
+
+                // Give names to the parts of the row
+                string setting = lineItems[0];
+                string value = lineItems[1];
+
+                // Add the setting, and warn of duplicates
+                if (settings.Keys.Contains(setting))
+                {
+                    ErrorLogger.AddLog(string.Format("Warning: Setting file contains multiple entries for setting '{0}'. The previous value for this setting ('{1}') is being overwritten by '{2}'.", setting, settings[setting], value));
+                }
+                settings[setting] = value;
+            }
+
+            return settings;
         }
 
         /// <summary>
@@ -461,6 +513,32 @@ namespace ProjectManager
         }
 
         /// <summary>
+        /// Writes the user settings to the settings file.
+        /// </summary>
+        public static void WriteSettingsToFile()
+        {
+            // Init the new file text
+            StringBuilder newFileText = new StringBuilder();
+            newFileText.Append(settingsFileTemplate);
+
+            // Add the sorting method
+            newFileText.Append(string.Format(
+                settingsFileRow,
+                UserSettings.sortingMethodKey,
+                UserSettings.ProjectSortingMethodString));
+
+            // Write the file
+            try
+            {
+                File.WriteAllText(settingsFilename, newFileText.ToString());
+            }
+            catch (IOException e)
+            {
+                ErrorLogger.AddLog(string.Format("Could not write settings to settings file. Error:\n{0}\n\nSettings:\n{1}.", e.Message, newFileText.ToString()));
+            }
+        }
+
+        /// <summary>
         /// Creates (and possibly overwrites) the log, notes, and files files for the given project.
         /// </summary>
         /// <param name="project">The project whose files to create.</param>
@@ -600,16 +678,40 @@ namespace ProjectManager
         }
 
         /// <summary>
-        /// Opens the notes file for the given project.
+        /// Opens the notes file for the given project (or the generic note file if no project given).
         /// </summary>
-        /// <param name="project">The project whose notes file to open.</param>
-        public static void OpenNotesFile(Project project)
+        /// <param name="project">The project whose notes file to open. Open the generic notes file if null.</param>
+        public static void OpenNotesFile(Project project = null)
         {
             // Check to make sure the file exists, and create it if necessary
-            string notesFilename = GetFileNameForProject(project, FileType.NOTES);
-            if (!File.Exists(notesFilename))
+            string notesFilename;
+            
+            // Handle the case where we have a project
+            if (project != null)
             {
-                CreateFilesForProject(project, false);
+                notesFilename = GetFileNameForProject(project, FileType.NOTES);
+                if (!File.Exists(notesFilename))
+                {
+                    CreateFilesForProject(project, false);
+                }
+            }
+
+            // Handle the case where we have no project
+            else
+            {
+                notesFilename = allProjectsNotesFilename;
+                try 
+                { 
+                    if (!File.Exists(notesFilename))
+                    {
+                        File.WriteAllText(notesFilename, allProjectsNotesFileTemplate);
+                    }
+                }
+                catch (IOException e)
+                {
+                    ErrorLogger.AddLog(string.Format("Error creating common notes file:\n{0}", e.Message));
+                    return;
+                }
             }
 
             // Append a timestamp to the notes file
@@ -727,6 +829,8 @@ namespace ProjectManager
         // Filenames //
         //-----------//
         private static string allProjectsFilename = "data\\projects.txt";
+        private static string allProjectsNotesFilename = "data\\notes.txt";
+        private static string settingsFilename = "data\\settings.txt";
 
         private static string projectLogsFilename = "data\\logs\\{0}_{1}_logs.txt";
         private static string projectNotesFilename = "data\\notes\\{0}_{1}_notes.txt";
@@ -806,6 +910,17 @@ namespace ProjectManager
          * # Format: id|name 
          * 
          */
+        private const string allProjectsNotesFileTemplate = "# Common Notes File\n";
+        /* # Common Notes File
+         */
+        private const string settingsFileTemplate = "# Warning: Do not edit by hand\n#\n# SETTINGS FILE\n#\n# Format: setting|value\n\n";
+        /* # Warning: Do not edit by hand
+         * #
+         * # SETTINGS FILE
+         * #
+         * # Format: setting|value
+         * 
+         */
         private const string projectLogsFileTemplate = "# Warning: Do not edit by hand\n#\n# LOG FILE\n#\n# Project: {0}\n# Id: {1}\n#\n# Format: id|start time|end time|description\n\n";
         /* # Warning: Do not edit by hand
          * #
@@ -832,6 +947,7 @@ namespace ProjectManager
          * 
          */
         private const string allProjectsFileRow = "{0}|{1}\n";
+        private const string settingsFileRow = "{0}|{1}\n";
         private const string projectLogFileRow = "{0}|{1}|{2}|{3}\n";
         private const string projectFileFileRow = "{0}|{1}|{2}|{3}\n";
         private const string timeStampTemplate = "\n** {0} **\n\n";

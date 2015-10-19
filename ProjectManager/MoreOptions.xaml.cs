@@ -23,18 +23,51 @@ namespace ProjectManager
         public MoreOptions()
         {
             InitializeComponent();
-            InitSortingMethodAndRadioButtonMaps();
+
+            // Create the settings maps
+            InitUIControlMaps();
+
+            // Set up the settings on the UI
             SetUpUIFromUserSettings();
+        }
+
+        //------------------//
+        // External Methods //
+        //------------------//
+        /// <summary>
+        /// Applies the settings from the UI to the static UserSettings class.
+        /// </summary>
+        public void ApplySettingsToUserSettings()
+        {
+            foreach (var pair in radioButtonToSortingMethod)
+            {
+                // If this rb is checked, set it in the UserSettings
+                if (pair.Key.IsChecked == true)
+                {
+                    UserSettings.ProjectSortingMethod = pair.Value;
+                }
+            }
         }
 
         //----------------//
         // Helper Methods //
         //----------------//
         /// <summary>
-        /// Initializes the dictionaries that map SortingMethods to
-        /// RadioButtons.
+        /// Applies the settings from the static UserSettings class to the UI.
         /// </summary>
-        private void InitSortingMethodAndRadioButtonMaps()
+        private void SetUpUIFromUserSettings()
+        {
+            foreach (var pair in sortingMethodToRadioButton)
+            {
+                // If this SortingMethod is selected, check the corresponding rb
+                pair.Value.IsChecked = pair.Key == UserSettings.ProjectSortingMethod;
+            }
+        }
+
+        /// <summary>
+        /// Initializes the dictionaries that map settings to UI controls.
+        /// </summary>
+        private void InitUIControlMaps()
         {
             sortingMethodToRadioButton = new Dictionary<SortingMethod, RadioButton>()
             {
@@ -53,44 +86,22 @@ namespace ProjectManager
             };
         }
 
-        /// <summary>
-        /// Applies the settings from the static UserSettings class to the UI.
-        /// </summary>
-        private void SetUpUIFromUserSettings()
-        {
-            foreach (var pair in sortingMethodToRadioButton)
-            {
-                // If this SortingMethod is selected, check the corresponding rb
-                pair.Value.IsChecked = pair.Key == UserSettings.ProjectSortingMethod;
-            }
-        }
-
-        /// <summary>
-        /// Applies the settings from the UI to the static UserSettings class.
-        /// </summary>
-        private void ApplySettingsToUserSettings()
-        {
-            foreach (var pair in radioButtonToSortingMethod)
-            {
-                // If this rb is checked, set it in the UserSettings
-                if (pair.Key.IsChecked == true)
-                {
-                    UserSettings.ProjectSortingMethod = pair.Value;
-                }
-            }
-        }
-
         //---------------//
         // Event Handles //
         //---------------//
         private void b_OpenNotes_Click(object sender, RoutedEventArgs e)
         {
-
+            ProjectFileInterface.OpenNotesFile();
         }
 
         private void b_Defaults_Click(object sender, RoutedEventArgs e)
         {
-
+            ConfirmationDialog window = new ConfirmationDialog("Are you sure you wish to reset all settings to their default values?");
+            if (window.ShowDialog() == true)
+            {
+                UserSettings.ResetToDefaults();
+                SetUpUIFromUserSettings();
+            }
         }
 
         private void b_ClearProjects_Click(object sender, RoutedEventArgs e)

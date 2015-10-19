@@ -29,6 +29,12 @@ namespace ProjectManager
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             ProjectFileInterface.WriteProjectsToListFile(ProjectOrganizer.Projects);
+            // If we quit from the 'More Options' screen, apply the UI settings
+            if (Content is MoreOptions)
+            {
+                ((MoreOptions)Content).ApplySettingsToUserSettings();
+            }
+            ProjectFileInterface.WriteSettingsToFile();
         }
     }
 }
