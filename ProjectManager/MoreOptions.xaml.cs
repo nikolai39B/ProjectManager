@@ -20,6 +20,8 @@ namespace ProjectManager
     /// </summary>
     public partial class MoreOptions : UserControl
     {
+        // TODO: Add hide project functionality
+        
         public MoreOptions()
         {
             InitializeComponent();
