@@ -10,9 +10,9 @@ using System.Windows;
 [assembly: AssemblyTitle("ProjectManager")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Siemens")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("ProjectManager")]
-[assembly: AssemblyCopyright("Copyright © Siemens 2015")]
+[assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

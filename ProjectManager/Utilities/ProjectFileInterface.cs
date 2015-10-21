@@ -987,10 +987,11 @@ namespace ProjectManager
         private const string settingsFileRow = "{0}|{1}\n";
         private const string projectLogFileRow = "{0}|{1}|{2}|{3}\n";
         private const string projectFileFileRow = "{0}|{1}|{2}|{3}\n";
-        private const string timeStampTemplate = "\n** {0} **\n\n";
+        private const string timeStampTemplate = "\n** {0} **\n\n\n";
         /*
          * ** {0} **
          *  
+         * 
          */
     }
 }

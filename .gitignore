@@ -7,5 +7,6 @@ ProjectManager/bin/Debug/launchManager.bat
 # Object files
 ProjectManager/obj
 
-# Solution User Options
+# User Options / Prefs
 *.suo
+ProjectManager/ProjectManager.csproj.user
