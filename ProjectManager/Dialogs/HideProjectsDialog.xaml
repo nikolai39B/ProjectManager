@@ -1,0 +1,30 @@
+﻿<Window x:Class="ProjectManager.HideProjectsDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Background="#000016" ResizeMode="CanMinimize"
+        Title="Show / Hide Projects" Width="500" SizeToContent="Height" 
+        Icon="../pm_icon.ico">
+    <StackPanel>
+        <!-- Title -->
+        <TextBlock Margin="0 5 0 10" Style="{StaticResource tbl_HeaderSmall}" Text="Show / Hide Projects"/>
+
+        <!-- Items -->
+        <ScrollViewer Margin="0 0 3 15" Height="200">
+            <StackPanel Margin="5 0" Name="sp_Entries" />
+        </ScrollViewer>
+
+        <!-- Utility Buttons -->
+        <Grid Margin="0 0 0 10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.25*"/>
+                <ColumnDefinition Width="0.25*"/>
+                <ColumnDefinition Width="0.25*"/>
+                <ColumnDefinition Width="0.25*"/>
+            </Grid.ColumnDefinitions>
+            <Button Click="b_Save_Click" Content="Save" Grid.Column="0" IsDefault="True" Name="b_Save" Width="100" />
+            <Button Click="b_Cancel_Click" Content="Cancel" Grid.Column="1" IsCancel="True" Name="b_Cancel" Width="100" />
+            <Button Click="b_ShowAll_Click" Content="Show All" Grid.Column="2" Name="b_ShowAll" Width="100" />
+            <Button Click="b_HideAll_Click" Content="Hide All" Grid.Column="3" Name="b_HideAll" Width="100" />
+        </Grid>
+    </StackPanel>
+</Window>

@@ -136,7 +136,9 @@ namespace ProjectManager
                 // Ensure that the line has the correct format
                 string[] lineItems = line.Split('|');
                 int numberOfItems = 2;
-                if (lineItems.Length != numberOfItems)
+
+                // Allow more than the number of items because the setting value itself could contain delimited values
+                if (lineItems.Length < numberOfItems)
                 {
                     ErrorLogger.AddLog(string.Format("Could not parse line '{0}'. Skipping entry.", line));
                     continue;
@@ -144,7 +146,7 @@ namespace ProjectManager
 
                 // Give names to the parts of the row
                 string setting = lineItems[0];
-                string value = lineItems[1];
+                string value = line.Substring(lineItems[0].Length + 1); // we can't do lineItems[1] because the setting value could contain delimiters
 
                 // Add the setting, and warn of duplicates
                 if (settings.Keys.Contains(setting))
@@ -527,6 +529,26 @@ namespace ProjectManager
                 UserSettings.sortingMethodKey,
                 UserSettings.ProjectSortingMethodString));
 
+            // Add the hidden projects
+            StringBuilder hiddenProjectsValue = new StringBuilder();
+            bool needToRemovePipe = false;
+            foreach (var project in UserSettings.HiddenProjects)
+            {
+                hiddenProjectsValue.Append(string.Format("{0}|", project.Id));
+                needToRemovePipe = true;
+            }
+
+            // Remove the trailing pipe if necessary
+            if (needToRemovePipe)
+            {
+                hiddenProjectsValue.Remove(hiddenProjectsValue.Length - 1, 1);
+            }
+            
+            newFileText.Append(string.Format(
+                settingsFileRow, 
+                UserSettings.hiddenProjectsKey,
+                hiddenProjectsValue.ToString()));
+
             // Write the file
             try
             {
@@ -732,6 +754,21 @@ namespace ProjectManager
             catch (FileNotFoundException e)
             {
                 ErrorLogger.AddLog(string.Format("Error opening project '{0}' notes file:\n{1}", project.Name, e.Message));
+            }
+        }
+
+        /// <summary>
+        /// Opens the program's error log file.
+        /// </summary>
+        public static void OpenErrorLogFile()
+        {
+            try
+            {
+                Process.Start(ErrorLogger.ErrorLogFilename);
+            }
+            catch (FileNotFoundException e)
+            {
+                ErrorLogger.AddLog(string.Format("Error opening error log file:\n{0}", e.Message));
             }
         }
 

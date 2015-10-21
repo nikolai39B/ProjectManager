@@ -1,0 +1,17 @@
+﻿<Window x:Class="ProjectManager.NotificationDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Background="#000016" ResizeMode="CanMinimize" 
+        Icon="../pm_icon.ico"
+        Title="Notification" Width="300" SizeToContent="Height">
+    <StackPanel>
+        <!-- Title -->
+        <TextBlock Margin="0 5 0 10" Name="tbl_Title" Style="{StaticResource tbl_HeaderSmall}" Text="Notification" />
+
+        <!-- Message -->
+        <TextBlock Name="tbl_Message" Margin="10 0 10 10" Text="BE NOTIFIED!!!" TextWrapping="Wrap" />
+
+        <!-- Buttons -->
+        <Button Click="b_OK_Click" Content="OK" Grid.Column="0" IsDefault="True" Margin="0 0 0 10" Name="b_OK" Width="70"/>
+    </StackPanel>
+</Window>

@@ -45,8 +45,8 @@
                 <ColumnDefinition Width="0.33*" />
             </Grid.ColumnDefinitions>
             <Button Click="b_Save_Click" Content="Save" Grid.Column="0" IsDefault="True" Name="b_Save" Width="70"/>
-            <Button Click="b_Delete_Click" Content="Delete" Grid.Column="1" IsDefault="True" Name="b_Delete" Width="70"/>
-            <Button Click="b_Cancel_Click" Content="Cancel" Grid.Column="2" IsCancel="True" Name="b_Cancel" Width="70"/>
+            <Button Click="b_Delete_Click" Content="Delete" Grid.Column="1" Name="b_Delete" Width="70"/>
+            <Button Click="b_Cancel_Click" Content="Cancel" Grid.Column="2" Name="b_Cancel" Width="70"/>
         </Grid>
     </StackPanel>
 </Window>

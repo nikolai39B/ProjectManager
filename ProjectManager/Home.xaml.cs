@@ -54,38 +54,7 @@ namespace ProjectManager
         private void AddProject(string projectName)
         {
             Project newProject = ProjectOrganizer.CreateNewProject(projectName);
-            //AddProjectToStackPanel(newProject);
             GoToProjectMenu(newProject);
-        }
-
-        /// <summary>
-        /// Clears and repopulates the project stack panels.
-        /// </summary>
-        private void PopulateProjectsStackPanels()
-        {
-            sp_ProjectsLeft.Children.Clear();
-            sp_ProjectsRight.Children.Clear();
-            foreach (var project in ProjectOrganizer.Projects)
-            {
-                AddProjectToStackPanel(project);
-            }
-        }
-
-        /// <summary>
-        /// Creates a new project row for the given project and adds it to the correct stack panel.
-        /// </summary>
-        /// <param name="project">The project to add.</param>
-        private void AddProjectToStackPanel(Project project)
-        {
-            HomeProjectRow projectRow = new HomeProjectRow(project, this);
-            if (sp_ProjectsLeft.Children.Count <= sp_ProjectsRight.Children.Count)
-            {
-                sp_ProjectsLeft.Children.Add(projectRow);
-            }
-            else
-            {
-                sp_ProjectsRight.Children.Add(projectRow);
-            }
         }
 
         /// <summary>
@@ -97,28 +66,13 @@ namespace ProjectManager
             List<HomeProjectRow> newProjectRows = new List<HomeProjectRow>();
             List<Project> projects = ProjectOrganizer.Projects;
 
-            // Sort based on the UserSettings
-            switch (UserSettings.ProjectSortingMethod)
+            try
             {
-                case SortingMethod.ID_LOW:
-                    projects = projects.OrderBy(p => p.Id).ToList();
-                    break;
-                    
-                case SortingMethod.ID_HIGH:
-                    projects = projects.OrderBy(p => p.Id).Reverse().ToList();
-                    break;
-                    
-                case SortingMethod.NAME_A_TO_Z:
-                    projects = projects.OrderBy(p => p.Name).ToList();
-                    break;
-                    
-                case SortingMethod.NAME_Z_TO_A:
-                    projects = projects.OrderBy(p => p.Name).Reverse().ToList();
-                    break;
-
-                default:
-                    ErrorLogger.AddLog(string.Format("Invalid sorting method '{0}' provided. Cannot sort projects.", UserSettings.ProjectSortingMethod));
-                    break;
+                projects = ProjectOrganizer.SortProjects(projects, UserSettings.ProjectSortingMethod);
+            }
+            catch (ArgumentException)
+            {
+                ErrorLogger.AddLog(string.Format("Invalid sorting method '{0}' provided. Cannot sort projects.", UserSettings.ProjectSortingMethod));
             }
 
             // Create and add the new project rows
@@ -127,6 +81,12 @@ namespace ProjectManager
             sp_ProjectsRight.Children.Clear();
             foreach (var project in projects)
             {
+                // If we are hiding this project, continue
+                if (UserSettings.HiddenProjects.Contains(project))
+                {
+                    continue;
+                }
+
                 HomeProjectRow row = new HomeProjectRow(project, this);
                 if (addToLeft)
                 {

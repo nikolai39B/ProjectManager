@@ -12,6 +12,8 @@ namespace ProjectManager
     {
         static ErrorLogger()
         {
+            ErrorsOccured = false;
+
             // Get the full path for the log file and create it if necessary
             errorLogFilename = Path.Combine(Environment.CurrentDirectory, errorLogFilename);
 
@@ -32,6 +34,9 @@ namespace ProjectManager
             }
         }
 
+        //------------------//
+        // External Methods //
+        //------------------//
         /// <summary>
         /// Adds the given string to the log file. Automatically adds a timestamp.
         /// </summary>
@@ -43,30 +48,58 @@ namespace ProjectManager
         {
             try
             {
+                // Note that errors have occured
+                ErrorsOccured = true;
+
                 // Get the date time as a string and the current file contents
                 string dateTimeNowString = DateTime.Now.ToString();
                 string oldFileContents = File.ReadAllText(errorLogFilename);
 
                 // Build the new file contents
                 StringBuilder newFileContents = new StringBuilder();
-                newFileContents.Append("-----\n");
+                string lineOfDashes = new String('-', 50);
+
+                // Header
+                newFileContents.Append(string.Format("{0}\n", lineOfDashes));
                 newFileContents.Append(dateTimeNowString);
-                newFileContents.Append('\n');
-                newFileContents.Append(string.Format("Method {0}() in {1} @ line {2}\n", currentFunction, currentFile, line));
+                newFileContents.Append("\n");
                 newFileContents.Append(log);
-                newFileContents.Append("\n-----\n\n");
+
+                // Immediate caller
+                newFileContents.Append("\n\nImmediate Context:\n");
+                newFileContents.Append(string.Format("    Method {0}()\n", currentFunction));
+                newFileContents.Append(string.Format("    in {0}\n", currentFile));
+                newFileContents.Append(string.Format("    @ line {0}\n", line));
+
+                // Full callstack
+                newFileContents.Append("\nCallstack:\n");
+                newFileContents.Append(Environment.StackTrace);
+
+                // End
+                newFileContents.Append(string.Format("\n{0}\n\n", lineOfDashes));
                 newFileContents.Append(oldFileContents);
 
                 // Write the file
                 File.WriteAllText(errorLogFilename, newFileContents.ToString());
             }
-            catch (IOException)
+            catch (IOException e)
             {
-                // TODO: Handle this exception
+                // If we get here, something went pretty wrong. Let the user know.
+                NotificationDialog window = new NotificationDialog("Error",
+                    string.Format("This program encountered an error, and the error couldn't get logged.\n\nInitial error:\n{0}\n\nError log write error:\n{1}\n\nIf this problem persists, please contact us and let us know that it's happening.", log, e.Message));
+
+                window.ShowDialog();
             }
         }
 
+        //------//
+        // Data //
+        //------//
         private static string errorLogFilename = "data\\errorLogs.txt";
+        public static string ErrorLogFilename { get { return errorLogFilename; } }
+
+        public static bool ErrorsOccured { get; private set; }
+
         private static string[] requiredDirectories = new string[] { "data" };
     }
 }

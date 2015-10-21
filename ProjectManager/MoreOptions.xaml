@@ -10,18 +10,30 @@
 
         <!-- Contents -->
         <StackPanel Height="205" Margin="0 0 0 15">
-            <TextBlock Margin="0 0 0 5" Name="tbl_Title" Style="{StaticResource tbl_HeaderSmall}" Text="Sorting" />
-            <Grid>
+            <!-- Project Sorting -->
+            <TextBlock Margin="0 0 0 5" Style="{StaticResource tbl_HeaderSmall}" Text="Project Sorting" />
+            <Grid Margin="0 0 0 10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="0.25*" />
                     <ColumnDefinition Width="0.25*" />
                     <ColumnDefinition Width="0.25*" />
                     <ColumnDefinition Width="0.25*" />
                 </Grid.ColumnDefinitions>
-                <RadioButton Grid.Column="0" HorizontalAlignment="Center" IsChecked="True" Name="rb_IdLow" Content="Id (Low)" />
-                <RadioButton Grid.Column="1" HorizontalAlignment="Center" Name="rb_IdHigh" Content="Id (High)" />
+                <RadioButton Grid.Column="0" HorizontalAlignment="Center" IsChecked="True" Name="rb_OldFirst" Content="Old First" />
+                <RadioButton Grid.Column="1" HorizontalAlignment="Center" Name="rb_NewFirst" Content="New First" />
                 <RadioButton Grid.Column="2" HorizontalAlignment="Center" Name="rb_NameAToZ" Content="Name (A to Z)" />
                 <RadioButton Grid.Column="3" HorizontalAlignment="Center" Name="rb_NameZToA" Content="Name (Z to A)" />
+            </Grid>
+
+            <!-- Project Management -->
+            <TextBlock Margin="0 0 0 5" Style="{StaticResource tbl_HeaderSmall}" Text="Manage Projects" />
+            <Grid Margin="0 0 0 10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.5*" />
+                    <ColumnDefinition Width="0.5*" />
+                </Grid.ColumnDefinitions>
+                <Button Click="b_HideProjects_Click" Content="Hide Projects" Grid.Column="0" Name="b_HideProjects" Width="120" />
+                <Button Click="b_ClearProjects_Click" Content="Clear Projects" Grid.Column="1" Name="b_ClearProjects" Width="120" />
             </Grid>
         </StackPanel>
 
@@ -34,8 +46,8 @@
                 <ColumnDefinition Width="0.25*"/>
             </Grid.ColumnDefinitions>
             <Button Click="b_OpenNotes_Click" Content="Open Notes" Grid.Column="0" Name="b_OpenNotes" Width="100" />
-            <Button Click="b_Defaults_Click" Content="Defaults" Grid.Column="1" Name="b_Defaults" Width="100" />
-            <Button Click="b_ClearProjects_Click" Content="Clear Projects" Grid.Column="2" Name="b_ClearProjects" Width="100" />
+            <Button Click="b_OpenErrorLog_Click" Content="Open Error Log" Grid.Column="1" Name="b_OpenErrorLog" Width="100" />
+            <Button Click="b_Defaults_Click" Content="Defaults" Grid.Column="2" Name="b_Defaults" Width="100" />
             <Button Click="b_Back_Click" Content="Back" Grid.Column="3" Name="b_Back" Width="100" />
         </Grid>
     </StackPanel>

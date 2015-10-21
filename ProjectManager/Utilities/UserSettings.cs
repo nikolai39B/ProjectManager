@@ -23,7 +23,8 @@ namespace ProjectManager
         //------------------//
         public static void ResetToDefaults()
         {
-            ProjectSortingMethod = SortingMethod.ID_LOW;
+            ProjectSortingMethod = SortingMethod.NEW_FIRST;
+            HiddenProjects = new List<Project>();
         }
 
         /// <summary>
@@ -48,6 +49,10 @@ namespace ProjectManager
                         {
                             ErrorLogger.AddLog(string.Format("Could not parse value '{0}' for setting '{1}'.", pair.Value, pair.Key));
                         }
+                        break;
+
+                    case hiddenProjectsKey:
+                        HandleHiddenProjectsSettingString(pair.Value);
                         break;
 
                     default:
@@ -87,19 +92,63 @@ namespace ProjectManager
         {
             sortingMethodToString = new Dictionary<SortingMethod, string>()
             {
-                { SortingMethod.ID_LOW, "id_low" },
-                { SortingMethod.ID_HIGH, "id_high" },
+                { SortingMethod.OLD_FIRST, "old_first" },
+                { SortingMethod.NEW_FIRST, "new_first" },
                 { SortingMethod.NAME_A_TO_Z, "name_a_to_z" },
                 { SortingMethod.NAME_Z_TO_A, "name_z_to_a" }
             };
 
             stringToSortingMethod = new Dictionary<string, SortingMethod>()
             {
-                { "id_low", SortingMethod.ID_LOW },
-                { "id_high", SortingMethod.ID_HIGH },
+                { "old_first", SortingMethod.OLD_FIRST },
+                { "new_first", SortingMethod.NEW_FIRST },
                 { "name_a_to_z", SortingMethod.NAME_A_TO_Z },
                 { "name_z_to_a", SortingMethod.NAME_Z_TO_A }
             };
+        }
+
+        /// <summary>
+        /// Handles the line from the settings file corresponding to the hidden projects setting.
+        /// </summary>
+        /// <param name="settingValue">The value for the setting.</param>
+        private static void HandleHiddenProjectsSettingString(string settingValue)
+        {            
+            List<string> projectIdsToHide = settingValue.Split('|').ToList();
+
+            // If we have no projects to hide, return
+            if (projectIdsToHide.Count == 1 && projectIdsToHide[0] == "")
+            {
+                return;
+            }
+
+            // Loop through all the hidden projects' ids
+            foreach (var projectId in projectIdsToHide)
+            {
+                // Try to find the project with this id
+                int idAsInt;
+                Project project = null;
+                bool success = int.TryParse(projectId, out idAsInt);
+                if (success)
+                {
+                    project = ProjectOrganizer.GetProjectWithId(idAsInt);
+                    if (project == null)
+                    {
+                        success = false;
+                    }
+                }
+
+                // If we can't, log the error
+                if (!success)
+                {
+                    ErrorLogger.AddLog(string.Format("Could not find any project with id '{0}'.", projectId));
+                }
+
+                // Otherwise, note the setting
+                else if (!HiddenProjects.Contains(project))
+                {
+                    HiddenProjects.Add(project);
+                }
+            }
         }
 
         //------//
@@ -111,8 +160,11 @@ namespace ProjectManager
             get { return GetStringFromSortingMethod(ProjectSortingMethod); }
         }
 
+        public static List<Project> HiddenProjects { get; set; }
+
         // string keys
         public const string sortingMethodKey = "sorting_method";
+        public const string hiddenProjectsKey = "hidden_projects";
 
         // string maps
         private static Dictionary<SortingMethod, string> sortingMethodToString;
@@ -121,8 +173,8 @@ namespace ProjectManager
 
     public enum SortingMethod
     {
-        ID_LOW,
-        ID_HIGH,
+        OLD_FIRST,
+        NEW_FIRST,
         NAME_A_TO_Z,
         NAME_Z_TO_A,
 

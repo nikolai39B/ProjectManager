@@ -47,6 +47,10 @@ namespace ProjectManager
             {
                 Projects.Remove(project);
                 ProjectFileInterface.DeleteFilesForProject(project);
+                if (UserSettings.HiddenProjects.Contains(project))
+                {
+                    UserSettings.HiddenProjects.Remove(project);
+                }
             }
             else
             {
@@ -65,6 +69,60 @@ namespace ProjectManager
                 RemoveProject(project);
             }
             Projects = new List<Project>();
+        }
+
+        /// <summary>
+        /// Get the project with the given id.
+        /// </summary>
+        /// <param name="id">The id whose project to return.</param>
+        /// <returns>The corresponding project, or null if no project.</returns>
+        public static Project GetProjectWithId(int id)
+        {
+            foreach (var project in Projects)
+            {
+                if (project.Id == id)
+                {
+                    return project;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Returns a new list containing all of the given elements sorted using the given method.
+        /// Throws an ArgumentException if the sorting method is not valid.
+        /// </summary>
+        /// <param name="projects">The projects to sort.</param>
+        /// <param name="method">The method to use to sort the projects.</param>
+        /// <returns>The sorted list.</returns>
+        public static List<Project> SortProjects(List<Project> projects, SortingMethod method)
+        {
+            List<Project> sortedProjects = new List<Project>();
+
+            // Sort based on the UserSettings
+            switch (method)
+            {
+                case SortingMethod.OLD_FIRST:
+                    sortedProjects = projects.OrderBy(p => p.Id).ToList();
+                    break;
+
+                case SortingMethod.NEW_FIRST:
+                    sortedProjects = projects.OrderBy(p => p.Id).Reverse().ToList();
+                    break;
+
+                case SortingMethod.NAME_A_TO_Z:
+                    sortedProjects = projects.OrderBy(p => p.Name).ToList();
+                    break;
+
+                case SortingMethod.NAME_Z_TO_A:
+                    sortedProjects = projects.OrderBy(p => p.Name).Reverse().ToList();
+                    break;
+
+                default:
+                    throw new ArgumentException(string.Format("Invalid sorting method {0} given. Cannot sort.", method));
+            }
+
+            return sortedProjects;
         }
 
         //------//

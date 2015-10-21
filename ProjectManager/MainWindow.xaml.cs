@@ -35,6 +35,14 @@ namespace ProjectManager
                 ((MoreOptions)Content).ApplySettingsToUserSettings();
             }
             ProjectFileInterface.WriteSettingsToFile();
+
+            // If errors occured, tell the user
+            if (ErrorLogger.ErrorsOccured)
+            {
+                NotificationDialog window = new NotificationDialog("Errors Occured", 
+                    string.Format("Errors occured during this session. Please view the log file at\n{0}\nto see what went wrong.", ErrorLogger.ErrorLogFilename));
+                window.ShowDialog();
+            }
         }
     }
 }

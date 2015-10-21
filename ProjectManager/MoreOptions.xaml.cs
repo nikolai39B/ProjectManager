@@ -73,16 +73,16 @@ namespace ProjectManager
         {
             sortingMethodToRadioButton = new Dictionary<SortingMethod, RadioButton>()
             {
-                { SortingMethod.ID_LOW, rb_IdLow },
-                { SortingMethod.ID_HIGH, rb_IdHigh },
+                { SortingMethod.OLD_FIRST, rb_OldFirst },
+                { SortingMethod.NEW_FIRST, rb_NewFirst },
                 { SortingMethod.NAME_A_TO_Z, rb_NameAToZ },
                 { SortingMethod.NAME_Z_TO_A, rb_NameZToA }
             };
 
             radioButtonToSortingMethod = new Dictionary<RadioButton, SortingMethod>()
             {
-                { rb_IdLow, SortingMethod.ID_LOW },
-                { rb_IdHigh, SortingMethod.ID_HIGH },
+                { rb_OldFirst, SortingMethod.OLD_FIRST },
+                { rb_NewFirst, SortingMethod.NEW_FIRST },
                 { rb_NameAToZ, SortingMethod.NAME_A_TO_Z },
                 { rb_NameZToA, SortingMethod.NAME_Z_TO_A }
             };
@@ -91,9 +91,29 @@ namespace ProjectManager
         //---------------//
         // Event Handles //
         //---------------//
+        private void b_HideProjects_Click(object sender, RoutedEventArgs e)
+        {
+            HideProjectsDialog window = new HideProjectsDialog();
+            window.ShowDialog(); // the dialog should save any settings changes
+        }
+
+        private void b_ClearProjects_Click(object sender, RoutedEventArgs e)
+        {
+            ConfirmationDialog window = new ConfirmationDialog("Are you absolutely sure you want to delete all projects?");
+            if (window.ShowDialog() == true)
+            {
+                ProjectOrganizer.RemoveAllProjects();
+            }
+        }
+
         private void b_OpenNotes_Click(object sender, RoutedEventArgs e)
         {
             ProjectFileInterface.OpenNotesFile();
+        }
+
+        private void b_OpenErrorLog_Click(object sender, RoutedEventArgs e)
+        {
+            ProjectFileInterface.OpenErrorLogFile();
         }
 
         private void b_Defaults_Click(object sender, RoutedEventArgs e)
@@ -103,15 +123,6 @@ namespace ProjectManager
             {
                 UserSettings.ResetToDefaults();
                 SetUpUIFromUserSettings();
-            }
-        }
-
-        private void b_ClearProjects_Click(object sender, RoutedEventArgs e)
-        {
-            ConfirmationDialog window = new ConfirmationDialog("Are you absolutely sure you want to delete all projects?");
-            if (window.ShowDialog() == true)
-            {
-                ProjectOrganizer.RemoveAllProjects();
             }
         }
 

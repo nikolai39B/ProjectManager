@@ -1,0 +1,15 @@
+﻿<UserControl x:Class="ProjectManager.HideProjectRow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d">
+    <Grid Margin="0 0 0 3">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.75*"/>
+            <ColumnDefinition Width="0.25*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Column="0" Name="tbl_Name" Text="Item 1" />
+        <CheckBox Content="Hide" Grid.Column="1" IsChecked="False" HorizontalAlignment="Center" Name="cb_Hide" />
+    </Grid>
+</UserControl>

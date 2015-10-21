@@ -79,8 +79,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Dialogs\HideProjectsDialog.xaml.cs">
+      <DependentUpon>HideProjectsDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI Rows\HideProjectRow.xaml.cs">
+      <DependentUpon>HideProjectRow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MoreOptions.xaml.cs">
       <DependentUpon>MoreOptions.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\NotificationDialog.xaml.cs">
+      <DependentUpon>NotificationDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI Rows\ProjectFileRow.xaml.cs">
       <DependentUpon>ProjectFileRow.xaml</DependentUpon>
@@ -100,7 +109,19 @@
     <Compile Include="Dialogs\ViewLogDialog.xaml.cs">
       <DependentUpon>ViewLogDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\HideProjectsDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI Rows\HideProjectRow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MoreOptions.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\NotificationDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
