@@ -20,6 +20,15 @@ namespace ProjectManager
     /// </summary>
     public partial class MainWindow : Window
     {
+        // TODO:
+        // Add backup feature
+        // Warn on close if incomplete logs still present
+        // Add files to home page (common files)
+        // Move summary to more page
+        // Add help file
+        // Add rmb option on open notes to not add timestamp
+        // Change delete project to edit project and have it pop up a dialog to edit the name, clear logs, clear notes, clear files, or delete project
+
         public MainWindow()
         {
             InitializeComponent();
