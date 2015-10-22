@@ -54,7 +54,7 @@ namespace ProjectManager
             }
             else
             {
-                ErrorLogger.AddLog(string.Format("Could not remove project '{0}' from the list, as it was not in the list to begin with.", project.Name));
+                ErrorLogger.AddLog(string.Format("Could not remove project '{0}' from the list, as it was not in the list to begin with.", project.Name), ErrorSeverity.WARNING);
             }
         }
 

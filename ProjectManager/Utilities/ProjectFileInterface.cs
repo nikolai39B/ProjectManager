@@ -74,7 +74,7 @@ namespace ProjectManager
                 int numberOfItems = 2;
                 if (lineItems.Length != numberOfItems)
                 {
-                    ErrorLogger.AddLog(string.Format("Could not parse line '{0}'. Skipping entry.", line));
+                    ErrorLogger.AddLog(string.Format("Could not parse line '{0}'. Skipping entry.", line), ErrorSeverity.HIGH);
                     continue;
                 }
                     
@@ -84,7 +84,7 @@ namespace ProjectManager
                 bool parseIdSuccess = int.TryParse(lineItems[0], out projectId);
                 if (!parseIdSuccess || projectId < minId)
                 {
-                    ErrorLogger.AddLog(string.Format("Could not parse project id '{0}'. Skipping entry.", lineItems[0]));
+                    ErrorLogger.AddLog(string.Format("Could not parse project id '{0}'. Skipping entry.", lineItems[0]), ErrorSeverity.HIGH);
                     continue;
                 }
 
@@ -92,7 +92,7 @@ namespace ProjectManager
                 string projectName = lineItems[1];
                 if (projectName == "")
                 {
-                    ErrorLogger.AddLog(string.Format("Invalid project name '{0}'. Skipping entry.", lineItems[1]));
+                    ErrorLogger.AddLog(string.Format("Invalid project name '{0}'. Skipping entry.", lineItems[1]), ErrorSeverity.HIGH);
                     continue;
                 }
 
@@ -140,7 +140,7 @@ namespace ProjectManager
                 // Allow more than the number of items because the setting value itself could contain delimited values
                 if (lineItems.Length < numberOfItems)
                 {
-                    ErrorLogger.AddLog(string.Format("Could not parse line '{0}'. Skipping entry.", line));
+                    ErrorLogger.AddLog(string.Format("Could not parse line '{0}'. Skipping entry.", line), ErrorSeverity.HIGH);
                     continue;
                 }
 
@@ -151,7 +151,8 @@ namespace ProjectManager
                 // Add the setting, and warn of duplicates
                 if (settings.Keys.Contains(setting))
                 {
-                    ErrorLogger.AddLog(string.Format("Warning: Setting file contains multiple entries for setting '{0}'. The previous value for this setting ('{1}') is being overwritten by '{2}'.", setting, settings[setting], value));
+                    ErrorLogger.AddLog(string.Format("Warning: Setting file contains multiple entries for setting '{0}'. The previous value for this setting ('{1}') is being overwritten by '{2}'.",
+                        setting, settings[setting], value), ErrorSeverity.WARNING);
                 }
                 settings[setting] = value;
             }
@@ -191,7 +192,7 @@ namespace ProjectManager
                 // Make sure that we know what type of entry we are parsing
                 if (parsingCompletedEntries == null)
                 {
-                    ErrorLogger.AddLog(string.Format("Could not determin with log '{0}' should be complete or incomplete. Skipping entry.", line));
+                    ErrorLogger.AddLog(string.Format("Could not determin with log '{0}' should be complete or incomplete. Skipping entry.", line), ErrorSeverity.HIGH);
                     continue;
                 }
 
@@ -201,7 +202,7 @@ namespace ProjectManager
                 int numberOfItems = 4;
                 if (lineItems.Length != numberOfItems)
                 {
-                    ErrorLogger.AddLog(string.Format("Could not parse line '{0}'. Skipping entry.", line));
+                    ErrorLogger.AddLog(string.Format("Could not parse line '{0}'. Skipping entry.", line), ErrorSeverity.HIGH);
                     continue;
                 }
 
@@ -211,7 +212,7 @@ namespace ProjectManager
                 bool parseIdSuccess = int.TryParse(lineItems[0], out logId);
                 if (!parseIdSuccess || logId < minId)
                 {
-                    ErrorLogger.AddLog(string.Format("Could not parse log id '{0}'. Skipping entry.", lineItems[0]));
+                    ErrorLogger.AddLog(string.Format("Could not parse log id '{0}'. Skipping entry.", lineItems[0]), ErrorSeverity.HIGH);
                     continue;
                 }
 
@@ -225,7 +226,7 @@ namespace ProjectManager
                 {
                     if (e is ArgumentNullException || e is FormatException)
                     {
-                        ErrorLogger.AddLog(string.Format("Could not parse log start time '{0}'. Skipping entry.", lineItems[1]));
+                        ErrorLogger.AddLog(string.Format("Could not parse log start time '{0}'. Skipping entry.", lineItems[1]), ErrorSeverity.HIGH);
                         continue;
                     }
                     else
@@ -250,7 +251,7 @@ namespace ProjectManager
                     }
                     catch (FormatException)
                     {
-                        ErrorLogger.AddLog(string.Format("Could not parse log end time '{0}'. Skipping entry.", lineItems[1]));
+                        ErrorLogger.AddLog(string.Format("Could not parse log end time '{0}'. Skipping entry.", lineItems[1]), ErrorSeverity.HIGH);
                         continue;
                     }
                 }
@@ -258,7 +259,7 @@ namespace ProjectManager
                 else
                 {
                     ErrorLogger.AddLog(string.Format("Invalid end time '{0}' for log completion status ({1}). Skipping entry.", lineItems[1],
-                        parsingCompletedEntries == true ? "complete" : "incomplete"));
+                        parsingCompletedEntries == true ? "complete" : "incomplete"), ErrorSeverity.HIGH);
                     continue;
                 }
 
@@ -266,7 +267,7 @@ namespace ProjectManager
                 string description = lineItems[3];
                 if (description == "")
                 {
-                    ErrorLogger.AddLog(string.Format("Invalid log description '{0}'. Skipping entry.", lineItems[1]));
+                    ErrorLogger.AddLog(string.Format("Invalid log description '{0}'. Skipping entry.", lineItems[1]), ErrorSeverity.HIGH);
                     continue;
                 }
 
@@ -290,7 +291,7 @@ namespace ProjectManager
                     }
                     else
                     {
-                        ErrorLogger.AddLog(string.Format("Only one incomplete entry is allowed. Additional entry '{0}' will be skipped.", description));
+                        ErrorLogger.AddLog(string.Format("Only one incomplete entry is allowed. Additional entry '{0}' will be skipped.", description), ErrorSeverity.HIGH);
                         continue;                        
                     }
                 }
@@ -319,7 +320,7 @@ namespace ProjectManager
                 int numberOfItems = 4;
                 if (lineItems.Length != numberOfItems)
                 {
-                    ErrorLogger.AddLog(string.Format("Could not parse line '{0}'. Skipping entry.", line));
+                    ErrorLogger.AddLog(string.Format("Could not parse line '{0}'. Skipping entry.", line), ErrorSeverity.HIGH);
                     continue;
                 }
 
@@ -327,7 +328,7 @@ namespace ProjectManager
                 string fileTitle = lineItems[0];
                 if (fileTitle == "")
                 {
-                    ErrorLogger.AddLog(string.Format("Could not parse file title. Value was '{0}'. Skipping entry.", fileTitle));
+                    ErrorLogger.AddLog(string.Format("Could not parse file title. Value was '{0}'. Skipping entry.", fileTitle), ErrorSeverity.HIGH);
                     continue;
                 }
 
@@ -336,7 +337,7 @@ namespace ProjectManager
                 string isFileString = lineItems[2];
                 if (isFileString != "true" && isFileString != "false")
                 {
-                    ErrorLogger.AddLog(string.Format("Could not parse file type. Value was '{0}'. Skipping entry.", isFileString));
+                    ErrorLogger.AddLog(string.Format("Could not parse file type. Value was '{0}'. Skipping entry.", isFileString), ErrorSeverity.HIGH);
                     continue;
                 }
                 bool isFile = isFileString == "true" ? true : false;
@@ -351,7 +352,7 @@ namespace ProjectManager
                     }
                     catch (ArgumentException e)
                     {
-                        ErrorLogger.AddLog(string.Format("Could not parse filename '{0}':\n{1}\nSkipping entry.", fileName, e.Message));
+                        ErrorLogger.AddLog(string.Format("Could not parse filename '{0}':\n{1}\nSkipping entry.", fileName, e.Message), ErrorSeverity.HIGH);
                         continue;
                     }
                 }
@@ -361,7 +362,7 @@ namespace ProjectManager
                     bool result = Uri.TryCreate(fileName, UriKind.Absolute, out uriResult) && uriResult.Scheme == Uri.UriSchemeHttp;
                     if (!result)
                     {
-                        ErrorLogger.AddLog(string.Format("Could not parse url '{0}':\n{1}\nSkipping entry.", fileName));
+                        ErrorLogger.AddLog(string.Format("Could not parse url '{0}':\n{1}\nSkipping entry.", fileName), ErrorSeverity.HIGH);
                         continue;
                     }
                 }
@@ -376,7 +377,7 @@ namespace ProjectManager
                     }
                     catch (ArgumentException e)
                     {
-                        ErrorLogger.AddLog(string.Format("Could not parse filename '{0}':\n{1}\nSkipping entry.", programToOpen, e.Message));
+                        ErrorLogger.AddLog(string.Format("Could not parse filename '{0}':\n{1}\nSkipping entry.", programToOpen, e.Message), ErrorSeverity.HIGH);
                         continue;
                     }
                 }
@@ -460,7 +461,7 @@ namespace ProjectManager
             }
             catch (IOException e)
             {
-                ErrorLogger.AddLog(string.Format("Error parsing file '{0}':\n{1}", allProjectsFilename, e.Message));
+                ErrorLogger.AddLog(string.Format("Error parsing file '{0}':\n{1}", allProjectsFilename, e.Message), ErrorSeverity.HIGH);
                 return new List<string>();
             }
         }
@@ -510,7 +511,7 @@ namespace ProjectManager
             }
             catch (IOException e)
             {
-                ErrorLogger.AddLog(string.Format("Could not write to the project list file. Error:\n{0}", e.Message));
+                ErrorLogger.AddLog(string.Format("Could not write to the project list file. Error:\n{0}", e.Message), ErrorSeverity.HIGH);
             }
         }
 
@@ -567,7 +568,7 @@ namespace ProjectManager
             }
             catch (IOException e)
             {
-                ErrorLogger.AddLog(string.Format("Could not write settings to settings file. Error:\n{0}\n\nSettings:\n{1}.", e.Message, newFileText.ToString()));
+                ErrorLogger.AddLog(string.Format("Could not write settings to settings file. Error:\n{0}\n\nSettings:\n{1}.", e.Message, newFileText.ToString()), ErrorSeverity.MODERATE);
             }
         }
 
@@ -610,7 +611,7 @@ namespace ProjectManager
             // Make sure we have actually changed names
             if (oldName == project.Name)
             {
-                ErrorLogger.AddLog(string.Format("No file update necessary; project '{0}' has not changed names.", oldName));
+                ErrorLogger.AddLog(string.Format("No file update necessary; project '{0}' has not changed names.", oldName), ErrorSeverity.WARNING);
                 return;
             }
 
@@ -641,7 +642,7 @@ namespace ProjectManager
             }
             catch (IOException e)
             {
-                ErrorLogger.AddLog(string.Format("Could not read project '{0}' old notes file after name change:\n{1}", project.Name, e.Message));
+                ErrorLogger.AddLog(string.Format("Could not read project '{0}' old notes file after name change:\n{1}", project.Name, e.Message), ErrorSeverity.HIGH);
             }                       
 
             // Try to delete the old notes and log files
@@ -653,7 +654,7 @@ namespace ProjectManager
             }
             catch (IOException e)
             {
-                ErrorLogger.AddLog(string.Format("Could not delete old project '{0}' file after name change:\n{1}", project.Name, e.Message));
+                ErrorLogger.AddLog(string.Format("Could not delete old project '{0}' file after name change:\n{1}", project.Name, e.Message), ErrorSeverity.MODERATE);
             }
             
             // Create the new files and write to them
@@ -673,7 +674,7 @@ namespace ProjectManager
             catch (IOException e)
             {
                 ErrorLogger.AddLog(string.Format("Error writing to new project '{0}' file after name change:\n{1}\n\nProject Notes:\n{2}",
-                    project.Name, e.Message, notesText.ToString()));
+                    project.Name, e.Message, notesText.ToString()), ErrorSeverity.HIGH);
             }
         }
 
@@ -705,7 +706,7 @@ namespace ProjectManager
             }
             catch (IOException e)
             {
-                ErrorLogger.AddLog(string.Format("Could not delete files for project '{0}':\n{1}", project.Name, e.Message));
+                ErrorLogger.AddLog(string.Format("Could not delete files for project '{0}':\n{1}", project.Name, e.Message), ErrorSeverity.MODERATE);
                 return;
             }
         }
@@ -742,7 +743,7 @@ namespace ProjectManager
                 }
                 catch (IOException e)
                 {
-                    ErrorLogger.AddLog(string.Format("Error creating common notes file:\n{0}", e.Message));
+                    ErrorLogger.AddLog(string.Format("Error creating common notes file:\n{0}", e.Message), ErrorSeverity.HIGH);
                     return;
                 }
             }
@@ -754,7 +755,7 @@ namespace ProjectManager
             }
             catch (IOException e)
             {
-                ErrorLogger.AddLog(string.Format("Error opening project '{0}' notes file:\n{1}", project.Name, e.Message));
+                ErrorLogger.AddLog(string.Format("Error opening project '{0}' notes file:\n{1}", project.Name, e.Message), ErrorSeverity.HIGH);
             }
 
             // Try to open the file
@@ -764,7 +765,7 @@ namespace ProjectManager
             }
             catch (FileNotFoundException e)
             {
-                ErrorLogger.AddLog(string.Format("Error opening project '{0}' notes file:\n{1}", project.Name, e.Message));
+                ErrorLogger.AddLog(string.Format("Error opening project '{0}' notes file:\n{1}", project.Name, e.Message), ErrorSeverity.HIGH);
             }
         }
 
@@ -779,7 +780,7 @@ namespace ProjectManager
             }
             catch (FileNotFoundException e)
             {
-                ErrorLogger.AddLog(string.Format("Error opening error log file:\n{0}", e.Message));
+                ErrorLogger.AddLog(string.Format("Error opening error log file:\n{0}", e.Message), ErrorSeverity.HIGH);
             }
         }
 
@@ -826,7 +827,7 @@ namespace ProjectManager
             }
             catch (IOException e)
             {
-                ErrorLogger.AddLog(string.Format("Could not write to project '{0}' log:\n{1}\n\nProject Logs:\n{2}", project.Name, e.Message, fileText.ToString()));
+                ErrorLogger.AddLog(string.Format("Could not write to project '{0}' log:\n{1}\n\nProject Logs:\n{2}", project.Name, e.Message, fileText.ToString()), ErrorSeverity.HIGH);
             }
         }
 
@@ -860,7 +861,8 @@ namespace ProjectManager
             }
             catch (IOException e)
             {
-                ErrorLogger.AddLog(string.Format("Could not write to project '{0}' files file:\n{1}\n\nProject Files:\n{2}", project.Name, e.Message, fileText.ToString()));
+                ErrorLogger.AddLog(string.Format("Could not write to project '{0}' files file:\n{1}\n\nProject Files:\n{2}", 
+                    project.Name, e.Message, fileText.ToString()), ErrorSeverity.HIGH);
             }
         }
 

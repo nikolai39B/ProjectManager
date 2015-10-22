@@ -72,7 +72,7 @@ namespace ProjectManager
             }
             catch (ArgumentException)
             {
-                ErrorLogger.AddLog(string.Format("Invalid sorting method '{0}' provided. Cannot sort projects.", UserSettings.ProjectSortingMethod));
+                ErrorLogger.AddLog(string.Format("Invalid sorting method '{0}' provided. Cannot sort projects.", UserSettings.ProjectSortingMethod), ErrorSeverity.LOW);
             }
 
             // Create and add the new project rows

@@ -118,7 +118,7 @@ namespace ProjectManager
             // Make sure we don't already have an incomplete log outstanding
             if (CurrentProject.IncompleteLog != null)
             {
-                ErrorLogger.AddLog(string.Format("Cannot start a log while there is still a incomplete log outstanding. Log '{0}' ignored.", description));
+                ErrorLogger.AddLog(string.Format("Cannot start a log while there is still a incomplete log outstanding. Log '{0}' ignored.", description), ErrorSeverity.HIGH);
                 return;
             }
 
@@ -142,7 +142,7 @@ namespace ProjectManager
         {
             if (log == null)
             {
-                ErrorLogger.AddLog("Cannot finish a null log.");
+                ErrorLogger.AddLog("Cannot finish a null log.", ErrorSeverity.HIGH);
                 return;
             }
 
@@ -166,7 +166,7 @@ namespace ProjectManager
             if (CurrentProject.IncompleteLog != null && CurrentProject.IncompleteLog != log)
             {
                 ErrorLogger.AddLog(string.Format("Cannot add incomplete log '{0}', as project '{1}' already has a different incomplete log '{2}'.",
-                    log.Description, CurrentProject.Name, CurrentProject.IncompleteLog.Description));
+                    log.Description, CurrentProject.Name, CurrentProject.IncompleteLog.Description), ErrorSeverity.HIGH);
                 return;
             }
 
@@ -183,7 +183,7 @@ namespace ProjectManager
         {
             if (log.End == DateTime.MaxValue)
             {
-                ErrorLogger.AddLog(string.Format("Cannot add log '{0}', as it is not complete.", log.Description));
+                ErrorLogger.AddLog(string.Format("Cannot add log '{0}', as it is not complete.", log.Description), ErrorSeverity.HIGH);
                 return;
             }
 
@@ -285,7 +285,8 @@ namespace ProjectManager
                 }
                 else
                 {
-                    ErrorLogger.AddLog(string.Format("Could not start a log with description '{0}' because it was either blank or contained pipes ('|')", window.NewLogDescription));
+                    ErrorLogger.AddLog(string.Format("Could not start a log with description '{0}' because it was either blank or contained pipes ('|')",
+                         window.NewLogDescription), ErrorSeverity.HIGH);
                     return;
                 }
             }

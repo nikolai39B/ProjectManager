@@ -49,7 +49,7 @@ namespace ProjectManager
                         }
                         else
                         {
-                            ErrorLogger.AddLog(string.Format("Could not parse value '{0}' for setting '{1}'.", pair.Value, pair.Key));
+                            ErrorLogger.AddLog(string.Format("Could not parse value '{0}' for setting '{1}'.", pair.Value, pair.Key), ErrorSeverity.MODERATE);
                         }
                         break;
 
@@ -67,7 +67,7 @@ namespace ProjectManager
 
                     default:
                         // Log if we didn't recognize a setting
-                        ErrorLogger.AddLog(string.Format("Could not parse setting '{0}' with value '{1}'.", pair.Key, pair.Value));
+                        ErrorLogger.AddLog(string.Format("Could not parse setting '{0}' with value '{1}'.", pair.Key, pair.Value), ErrorSeverity.WARNING);
                         return;
                 }
             }
@@ -87,7 +87,7 @@ namespace ProjectManager
             }
             else
             {
-                ErrorLogger.AddLog(string.Format("Did not recognized sorting method '{0}'.", method));
+                ErrorLogger.AddLog(string.Format("Did not recognized sorting method '{0}'.", method), ErrorSeverity.MODERATE);
                 return "";
             }
         }
@@ -150,7 +150,7 @@ namespace ProjectManager
                 // If we can't, log the error
                 if (!success)
                 {
-                    ErrorLogger.AddLog(string.Format("Could not find any project with id '{0}'.", projectId));
+                    ErrorLogger.AddLog(string.Format("Could not find any project with id '{0}'.", projectId), ErrorSeverity.MODERATE);
                 }
 
                 // Otherwise, note the setting

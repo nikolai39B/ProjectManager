@@ -76,7 +76,7 @@ namespace ProjectManager
                 }
                 catch (ArgumentException e)
                 {
-                    ErrorLogger.AddLog(string.Format("Error getting short filename for file '{0}':\n'{1}'", Filename, e.Message));
+                    ErrorLogger.AddLog(string.Format("Error getting short filename for file '{0}':\n'{1}'", Filename, e.Message), ErrorSeverity.MODERATE);
                 }
             }
 
@@ -90,7 +90,7 @@ namespace ProjectManager
                 }
                 catch (UriFormatException e)
                 {
-                    ErrorLogger.AddLog(string.Format("Error getting short url for url '{0}':\n'{1}'", Filename, e.Message));
+                    ErrorLogger.AddLog(string.Format("Error getting short url for url '{0}':\n'{1}'", Filename, e.Message), ErrorSeverity.MODERATE);
                 }
             }
 

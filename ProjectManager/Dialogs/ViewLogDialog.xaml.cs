@@ -133,7 +133,7 @@ namespace ProjectManager
             }
             else
             {
-                ErrorLogger.AddLog(string.Format("Could not set calendar style for {0}.", dtp.Name));
+                ErrorLogger.AddLog(string.Format("Could not set calendar style for {0}.", dtp.Name), ErrorSeverity.LOW);
             }
         }
 

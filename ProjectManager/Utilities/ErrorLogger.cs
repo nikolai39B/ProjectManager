@@ -32,6 +32,16 @@ namespace ProjectManager
             {
                 File.WriteAllText(errorLogFilename, "");
             }
+
+            // Init the error severity to string map
+            errorSeverityToStringMap = new Dictionary<ErrorSeverity, string>()
+            {
+                { ErrorSeverity.WARNING, "Warning" },
+                { ErrorSeverity.LOW, "Low" },
+                { ErrorSeverity.MODERATE, "Moderate" },
+                { ErrorSeverity.HIGH, "High" },
+                { ErrorSeverity.NONE, "Unknown" }
+            };
         }
 
         //------------------//
@@ -41,7 +51,7 @@ namespace ProjectManager
         /// Adds the given string to the log file. Automatically adds a timestamp.
         /// </summary>
         /// <param name="log">The log string to add.</param>
-        public static void AddLog(string log,
+        public static void AddLog(string log, ErrorSeverity severity,
             [CallerMemberName] string currentFunction = "", 
             [CallerFilePath] string currentFile = "",
             [CallerLineNumber] int line = 0)
@@ -64,9 +74,10 @@ namespace ProjectManager
                 newFileContents.Append(dateTimeNowString);
                 newFileContents.Append("\n");
                 newFileContents.Append(log);
+                newFileContents.Append(string.Format("\nError Severity: {0}\n", errorSeverityToStringMap[severity]));
 
                 // Immediate caller
-                newFileContents.Append("\n\nImmediate Context:\n");
+                newFileContents.Append("\nImmediate Context:\n");
                 newFileContents.Append(string.Format("    Method {0}()\n", currentFunction));
                 newFileContents.Append(string.Format("    in {0}\n", currentFile));
                 newFileContents.Append(string.Format("    @ line {0}\n", line));
@@ -101,5 +112,17 @@ namespace ProjectManager
         public static bool ErrorsOccured { get; private set; }
 
         private static string[] requiredDirectories = new string[] { "data" };
+
+        private static Dictionary<ErrorSeverity, string> errorSeverityToStringMap;
+    }
+
+    public enum ErrorSeverity
+    {
+        WARNING,
+        LOW,
+        MODERATE,
+        HIGH,
+
+        NONE
     }
 }
