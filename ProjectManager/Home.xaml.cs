@@ -118,17 +118,17 @@ namespace ProjectManager
         {
             // Query all the projects
             List<SummaryRow> items = new List<SummaryRow>();
-            TimeSpan totalTime = new TimeSpan(0);
-            foreach (var project in ProjectOrganizer.Projects)
+            //TimeSpan totalTime = new TimeSpan(0);
+            foreach (var project in ProjectOrganizer.SortProjects(ProjectOrganizer.Projects, UserSettings.ProjectSortingMethod))
             {
-                TimeSpan projTime = project.GetTotalProjectTime();
-                items.Add(new SummaryRow(project.Name, projTime));
-                totalTime += projTime;
+                //TimeSpan projTime = project.GetTotalProjectTime();
+                items.Add(new SummaryRow(project));
+                //totalTime += projTime;
             }
-            SummaryRow total = new SummaryRow("Total Time:", totalTime);
+            //SummaryRow total = new SummaryRow("Total Time:", totalTime);
             
             // Display the window, but no need to wait for a response
-            SummaryDialog window = new SummaryDialog("All Projects", items, total);
+            SummaryDialog window = new SummaryDialog("All Projects", items, true);
             window.Show();
         }
 

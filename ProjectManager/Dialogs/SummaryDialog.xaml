@@ -18,6 +18,15 @@
         <StackPanel Margin="5 0 25 10" Name="sp_Total" />
 
         <!-- Button -->
-        <Button Click="b_Ok_Click" Content="Ok" IsDefault="True" Name="b_Ok" Margin="0 0 0 10" Width="70"/>
+        <Grid Margin="0 0 0 10" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.33*" />
+                <ColumnDefinition Width="0.33*" />
+                <ColumnDefinition Width="0.33*" />
+            </Grid.ColumnDefinitions>
+            <CheckBox Click="cb_SortByTime_Click" Content="Sort By Time" Grid.Column="0" HorizontalAlignment="Center" Name="cb_SortByTime" VerticalAlignment="Center" />
+            <Button Click="b_Ok_Click" Content="Ok" Grid.Column="1" IsDefault="True" Name="b_Ok" Width="70"/>
+            <CheckBox Click="cb_IgnoreHiddenProjects_Click" Content="Ignore Hidden Projects" Grid.Column="2" HorizontalAlignment="Center" Name="cb_IgnoreHiddenProjects" VerticalAlignment="Center" />
+        </Grid>
     </StackPanel>
 </Window>

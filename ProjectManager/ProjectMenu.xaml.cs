@@ -358,17 +358,13 @@ namespace ProjectManager
         {
             // Query the logs
             List<SummaryRow> items = new List<SummaryRow>();
-            TimeSpan totalTime = new TimeSpan(0);
             foreach (var log in CurrentProject.CompletedLogs)
             {
-                TimeSpan time = log.End - log.Start;
-                items.Add(new SummaryRow(log.Description, time));
-                totalTime += time;
+                items.Add(new SummaryRow(log));
             }
-            SummaryRow total = new SummaryRow("Total Time:", totalTime);
 
             // Show the summary window, but no need to wait for a response
-            SummaryDialog window = new SummaryDialog("Project Summary", items, total);
+            SummaryDialog window = new SummaryDialog("Project Summary", items, false);
             window.Show();
         }
 

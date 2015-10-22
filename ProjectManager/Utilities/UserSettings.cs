@@ -25,6 +25,8 @@ namespace ProjectManager
         {
             ProjectSortingMethod = SortingMethod.NEW_FIRST;
             HiddenProjects = new List<Project>();
+            SummarySortByTime = false;
+            SummaryIgnoreHiddenProjects = false;
         }
 
         /// <summary>
@@ -53,6 +55,14 @@ namespace ProjectManager
 
                     case hiddenProjectsKey:
                         HandleHiddenProjectsSettingString(pair.Value);
+                        break;
+
+                    case summarySortByTimeKey:
+                        SummarySortByTime = pair.Value.ToLower() == "true";
+                        break;
+
+                    case summaryIgnoreHiddenProjectsKey:
+                        SummaryIgnoreHiddenProjects = pair.Value.ToLower() == "true";
                         break;
 
                     default:
@@ -162,9 +172,14 @@ namespace ProjectManager
 
         public static List<Project> HiddenProjects { get; set; }
 
+        public static bool SummarySortByTime { get; set; }
+        public static bool SummaryIgnoreHiddenProjects { get; set; }
+
         // string keys
         public const string sortingMethodKey = "sorting_method";
         public const string hiddenProjectsKey = "hidden_projects";
+        public const string summarySortByTimeKey = "summary_sort_by_time";
+        public const string summaryIgnoreHiddenProjectsKey = "summary_ignore_hidden_projects";
 
         // string maps
         private static Dictionary<SortingMethod, string> sortingMethodToString;

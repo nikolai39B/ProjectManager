@@ -529,7 +529,7 @@ namespace ProjectManager
                 UserSettings.sortingMethodKey,
                 UserSettings.ProjectSortingMethodString));
 
-            // Add the hidden projects
+            // Add the hidden projects...
             StringBuilder hiddenProjectsValue = new StringBuilder();
             bool needToRemovePipe = false;
             foreach (var project in UserSettings.HiddenProjects)
@@ -538,7 +538,7 @@ namespace ProjectManager
                 needToRemovePipe = true;
             }
 
-            // Remove the trailing pipe if necessary
+            // ...and remove the trailing pipe if necessary
             if (needToRemovePipe)
             {
                 hiddenProjectsValue.Remove(hiddenProjectsValue.Length - 1, 1);
@@ -548,6 +548,17 @@ namespace ProjectManager
                 settingsFileRow, 
                 UserSettings.hiddenProjectsKey,
                 hiddenProjectsValue.ToString()));
+
+            // Add the summary settings
+            newFileText.Append(string.Format(
+                settingsFileRow, 
+                UserSettings.summarySortByTimeKey,
+                UserSettings.SummarySortByTime));
+
+            newFileText.Append(string.Format(
+                settingsFileRow,
+                UserSettings.summaryIgnoreHiddenProjectsKey,
+                UserSettings.SummaryIgnoreHiddenProjects));
 
             // Write the file
             try

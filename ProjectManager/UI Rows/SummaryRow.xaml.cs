@@ -20,17 +20,43 @@ namespace ProjectManager
     /// </summary>
     public partial class SummaryRow : UserControl
     {
-        public SummaryRow()
-            : this("", TimeSpan.MinValue)
+        /// <summary>
+        /// Use this constructor if you don't have a project or log instance.
+        /// </summary>
+        public SummaryRow(string title, TimeSpan time)
+            : this(title, time, null, null)
         {
         }
 
-        public SummaryRow(string name, TimeSpan time)
+        /// <summary>
+        /// Use this constructor if you have a project instance.
+        /// </summary>
+        public SummaryRow(Project project)
+            : this(project.Name, project.GetTotalProjectTime(), project, null)
+        {
+        }
+
+        /// <summary>
+        /// Use this constructor if you have a project log instance.
+        /// </summary>
+        public SummaryRow(ProjectLog log)
+            : this(log.Description, log.End - log.Start, null, log)
+        {
+        }
+
+        /// <summary>
+        /// Base constructor for all options.
+        /// </summary>
+        private SummaryRow(string title, TimeSpan time, Project project, ProjectLog log)
         {
             InitializeComponent();
-            tbl_Name.Text = name;
+            tbl_Name.Text = title;
+
             Time = time;
             SetTime();
+
+            CurrProject = project;
+            CurrLog = log;
         }
 
         /// <summary>
@@ -49,5 +75,8 @@ namespace ProjectManager
         public TimeSpan Time { get; private set; }
         private const string hourTemplate = "{0} hr";
         private const string minuteTemplate ="{0} min";
+
+        public Project CurrProject { get; private set; }
+        public ProjectLog CurrLog { get; private set; }
     }
 }
