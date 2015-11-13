@@ -117,7 +117,11 @@ namespace ProjectManager
 
         private void b_ClearErrorLog_Click(object sender, RoutedEventArgs e)
         {
-            ErrorLogger.ClearAllLogs();
+            ConfirmationDialog window = new ConfirmationDialog("Are you sure you wish to clear the error log?");
+            if (window.ShowDialog() == true)
+            {
+                ErrorLogger.ClearAllLogs();
+            }
         }
 
         private void b_OpenNotes_Click(object sender, RoutedEventArgs e)

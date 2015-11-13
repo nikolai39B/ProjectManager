@@ -1,1 +1,60 @@
-Project Manager Help
+####################################################################
+   _____   _____    ____        _  ______   ____   ______           
+   |    \  |    \  /    \       |  |       /    \    |              
+   |    |  |    |  |    |       |  |       |    |    |              
+   |____/  |____/  |    |  _    |  |___    |         |              
+   |       |  \    |    |  |    |  |       |         |              
+   |       |   \   |    |  |    |  |       |    |    |              
+   |       |    \  \____/  \____/  |_____  \____/    |              
+           _    _          _    _           ____   ______  _____    
+           |\  /|    /\    |\   |    /\    /    \  |       |    \   
+           | \/ |   /  \   | \  |   /  \   |    |  |       |    |   
+           |    |  /    \  |  \ |  /    \  |  ___  |_____  |____/   
+           |    |  |____|  |   \|  |____|  |    |  |       |  \     
+           |    |  |    |  |    |  |    |  |    |  |       |   \    
+           |    |  |    |  |    |  |    |  \____/  |_____  |    \   
+                                                                    
+####################################################################
+
+    Author:     Will Hauber
+    Version:    0.1.0.0
+    Date:       Nov 13, 2015
+    
+####################################################################
+ 
+    TABLE OF CONTENTS
+        
+1.  About
+2.  Creating Projects
+3.  Notes
+    a.  Opening Notes
+    b.  Time Stamping
+    c.  Clearing Notes
+    d.  Common Notes
+4.  Logs
+    a.  Creating a Logs
+    b.  Finishing a Logs
+    c.  Viewing Old Logs
+    d.  Log Summary
+    e.  Clearing Logs
+5.  Files
+    a.  Adding a File
+    b.  Adding a Url
+    c.  Opening Files
+    d.  Clearing Files
+6.  Managing Projects
+    a.  Sorting Projects
+    b.  Projects Summary
+    c.  Hiding Projects
+    d.  Clearing Projects    
+7.  Errors
+    a.  Viewing Errors
+    b.  Clearing Errors
+    c.  Debug Mode
+    
+####################################################################
+
+1.  ABOUT
+
+
+    
