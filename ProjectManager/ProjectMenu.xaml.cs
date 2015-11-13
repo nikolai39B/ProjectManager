@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,10 +30,13 @@ namespace ProjectManager
             // Update the UI
             RefreshLogsOnUI();
             RefreshFilesOnUI();
-            Loaded += ProjectMenu_Loaded;
 
-            // Hide the edit name button by default
-            b_EditName.Visibility = System.Windows.Visibility.Collapsed;
+            // Make the title realign everytime it's changed
+            DependencyPropertyDescriptor dp = DependencyPropertyDescriptor.FromProperty(TextBlock.ActualWidthProperty, typeof(TextBlock));
+            dp.AddValueChanged(tbl_Title, (object sender, EventArgs e) =>
+            {
+                SetIdealTitleAlignment();
+            });
         }
 
         //------------------//
@@ -216,11 +220,11 @@ namespace ProjectManager
         }
 
         /// <summary>
-        /// Sets the horizontal alignment of the title based on the 
+        /// Sets the horizontal alignment of the title based on its width.
         /// </summary>
         private void SetIdealTitleAlignment()
         {
-            if (tbl_Title.ActualWidth >= g_Title.ColumnDefinitions[0].ActualWidth)
+            if (tbl_Title.ActualWidth >= this.ActualWidth)
             {
                 tbl_Title.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
             }
@@ -236,40 +240,6 @@ namespace ProjectManager
         void ProjectMenu_Loaded(object sender, RoutedEventArgs e)
         {
             SetIdealTitleAlignment();
-        }
-
-        private void g_Title_MouseEnter(object sender, MouseEventArgs e)
-        {
-            b_EditName.Visibility = System.Windows.Visibility.Visible;
-            UpdateLayout();
-            SetIdealTitleAlignment();
-        }
-
-        private void g_Title_MouseLeave(object sender, MouseEventArgs e)
-        {
-            b_EditName.Visibility = System.Windows.Visibility.Collapsed;
-            UpdateLayout();
-            SetIdealTitleAlignment();
-        }
-
-        private void b_EditName_Click(object sender, RoutedEventArgs e)
-        {
-            // Use the new project dialog to get the new name
-            NewProjectDialog window = new NewProjectDialog("Edit Project Name", CurrentProject.Name, "Save");
-            if (window.ShowDialog() == true)
-            {
-                string oldName = CurrentProject.Name;
-                string newName = window.NewProjectName;
-
-                // Update the project and UI
-                CurrentProject.Name = newName;
-                tbl_Title.Text = newName;
-
-                // Update the files
-                ProjectFileInterface.UpdateFilenamesForNewProjectName(CurrentProject, oldName);
-                ProjectFileInterface.WriteProjectsToListFile(ProjectOrganizer.Projects, false, false, false);
-            }
-
         }
 
         private void b_NewLog_Click(object sender, RoutedEventArgs e)
@@ -369,16 +339,35 @@ namespace ProjectManager
             window.Show();
         }
 
-        private void b_DeleteProject_Click(object sender, RoutedEventArgs e)
+        private void b_EditProject_Click(object sender, RoutedEventArgs e)
         {
-            // Get confirmation from the user
-            ConfirmationDialog dialog = new ConfirmationDialog("Are you sure you wish to delete this project?");
-            if (dialog.ShowDialog() == true)
-            {
-                ProjectOrganizer.RemoveProject(CurrentProject);
-                Window parent = Window.GetWindow(this);
-                parent.Content = new Home();
-            }            
+            // Prompt the user for changes
+            EditProjectDialog window = new EditProjectDialog(CurrentProject);
+
+            if (window.ShowDialog() == true)
+            { 
+                // Delete the project if necessary
+                if (window.DeleteProject)
+                {
+                    ProjectOrganizer.RemoveProject(CurrentProject);
+                    Window parent = Window.GetWindow(this);
+                    parent.Content = new Home();
+                    return;
+                }
+
+                // Refresh the project's name on the UI if necessary
+                if (window.RefreshProjectNameOnUI)
+                {
+                    tbl_Title.Text = CurrentProject.Name;
+                }
+
+                // Refresh the project's data on the UI if necessary
+                if (window.RefreshProjectDataOnUI)
+                {
+                    RefreshLogsOnUI();
+                    RefreshFilesOnUI();
+                }
+            }
         }
 
         private void b_Back_Click(object sender, RoutedEventArgs e)

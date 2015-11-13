@@ -97,6 +97,9 @@
     <Compile Include="Dialogs\HideProjectsDialog.xaml.cs">
       <DependentUpon>HideProjectsDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\EditProjectDialog.xaml.cs">
+      <DependentUpon>EditProjectDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI Rows\HideProjectRow.xaml.cs">
       <DependentUpon>HideProjectRow.xaml</DependentUpon>
     </Compile>
@@ -125,6 +128,10 @@
       <DependentUpon>ViewLogDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\HideProjectsDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\EditProjectDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

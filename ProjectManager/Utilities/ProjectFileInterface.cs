@@ -785,6 +785,29 @@ namespace ProjectManager
         }
 
         /// <summary>
+        /// Resets the notes file for the given project.
+        /// </summary>
+        /// <param name="project">The project whose notes file to open.</param>
+        public static void ResetNotesFile(Project project = null)
+        {
+            if (project == null)
+            {
+                ErrorLogger.AddLog("Cannot reset notes file for null project.", ErrorSeverity.MODERATE);
+            }
+
+            string notesFilename = GetFileNameForProject(project, FileType.NOTES);
+            try
+            {
+                File.WriteAllText(notesFilename, string.Format(projectNotesFileTemplate, project.Name));
+            }
+            catch (IOException e)
+            {
+                ErrorLogger.AddLog(string.Format("Error resetting project {0} notes file:\n{1}", project.Name, e.Message), ErrorSeverity.MODERATE);
+                return;
+            }
+        }
+
+        /// <summary>
         /// Writes the given project's logs to its log file.
         /// </summary>
         /// <param name="project">The project whose logs to write.</param>

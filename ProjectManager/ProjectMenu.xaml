@@ -6,15 +6,7 @@
              mc:Ignorable="d">
     <StackPanel>
         <!-- Title and Change Name Button -->
-        <!-- Note: Background must be transparent for mouse events to work correctly -->
-        <Grid Background="Transparent" MouseEnter="g_Title_MouseEnter" MouseLeave="g_Title_MouseLeave" Name="g_Title">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Margin="0 5 0 15" Name="tbl_Title" Style="{StaticResource tbl_Header}" Text="Project Title"/>
-            <Button Click="b_EditName_Click" Content="Edit Name" Grid.Column="1" Margin="5 0" Name="b_EditName" Width="70" />
-        </Grid>
+        <TextBlock Grid.Column="0" Margin="0 5 0 15" Name="tbl_Title" Style="{StaticResource tbl_Header}" Text="Project Title"/>
 
         <!-- Incomplete Entry / Add File -->
         <Grid Margin="0 0 0 15">
@@ -82,7 +74,7 @@
             </Grid.ColumnDefinitions>
             <Button Click="b_OpenNotes_Click" Content="Open Notes" Grid.Column="0" Name="b_OpenNotes" Width="100" />
             <Button Click="b_Summary_Click" Content="Summary" Grid.Column="1" Name="b_Summary" Width="100" />
-            <Button Click="b_DeleteProject_Click" Content="Delete Project" Grid.Column="2" Name="b_DeleteProject" Width="100" />
+            <Button Click="b_EditProject_Click" Content="Edit Project" Grid.Column="2" Name="b_EditProject" Width="100" />
             <Button Click="b_Back_Click" Content="Back" Grid.Column="3" Name="b_Back" Width="100" />
         </Grid>
             

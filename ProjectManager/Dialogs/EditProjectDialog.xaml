@@ -1,0 +1,45 @@
+﻿<Window x:Class="ProjectManager.EditProjectDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Background="#00000016" ResizeMode="CanMinimize" 
+        Icon="../pm_icon.ico"
+        Title="Edit Project" Width="300" SizeToContent="Height"
+        FocusManager.FocusedElement="{Binding ElementName=tb_Description}">
+    <StackPanel>
+        <!-- Edit Project -->
+        <TextBlock Margin="0 5 0 10" Style="{StaticResource tbl_HeaderSmall}" Text="Edit Project"/>
+
+        <!-- Edit Project Name -->
+        <TextBlock HorizontalAlignment="Center" Margin="0 0 0 5" Text="Project Name" FontWeight="Bold" />
+        <TextBox Name="tb_ProjectName" Margin="10 0 10 5" />
+        <Button Click="b_ResetName_Click" Content="Reset" Grid.Column="1" Margin="0 0 0 10" Name="b_ResetName" Width="100"/>
+
+        <!-- Clear Project Data -->
+        <TextBlock HorizontalAlignment="Center" Margin="0 0 0 5" Text="Clear Project Data" FontWeight="Bold" />
+        <Grid Margin="0 0 0 10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.33*" />
+                <ColumnDefinition Width="0.33*" />
+                <ColumnDefinition Width="0.33*" />
+            </Grid.ColumnDefinitions>
+            <CheckBox Content="Notes" Grid.Column="0" HorizontalAlignment="Center" Name="cb_ClearNotes" VerticalAlignment="Center"/>
+            <CheckBox Content="Logs" Grid.Column="1" HorizontalAlignment="Center" Name="cb_ClearLogs" VerticalAlignment="Center"/>
+            <CheckBox Content="Files" Grid.Column="2" HorizontalAlignment="Center" Name="cb_ClearFiles" VerticalAlignment="Center"/>
+        </Grid>
+
+        <!-- Error Message -->
+        <TextBlock Name="tbl_ErrorMessage" Margin="10 0 10 10" Style="{StaticResource tbl_Error}" Text="Unknown error occurred." TextWrapping="Wrap" Visibility="Collapsed" />
+
+        <!-- Buttons -->
+        <Grid Margin="0 0 0 10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.33*"/>
+                <ColumnDefinition Width="0.33*"/>
+                <ColumnDefinition Width="0.33*"/>
+            </Grid.ColumnDefinitions>
+            <Button Click="b_Apply_Click" Content="Apply" Grid.Column="0" IsDefault="True" Name="b_Apply" Width="70"/>
+            <Button Click="b_Delete_Click" Content="Delete" Grid.Column="1" Name="b_Delete" Width="70"/>
+            <Button Click="b_Cancel_Click" Content="Cancel" Grid.Column="2" Name="b_Cancel" Width="70"/>
+        </Grid>
+    </StackPanel>
+</Window>

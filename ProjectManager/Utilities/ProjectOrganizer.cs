@@ -38,7 +38,8 @@ namespace ProjectManager
         }
 
         /// <summary>
-        /// Removes the given project from the list if possible.
+        /// Removes the given project from the list if possible. Will also delete the project's data files.
+        /// This call should be all that is necessary to effectively delete a project.
         /// </summary>
         /// <param name="project">The project to remove.</param>
         public static void RemoveProject(Project project)

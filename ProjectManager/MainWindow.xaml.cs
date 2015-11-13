@@ -27,7 +27,9 @@ namespace ProjectManager
         // Move summary to more page
         // Add help file
         // Add rmb option on open notes to not add timestamp
-        // Change delete project to edit project and have it pop up a dialog to edit the name, clear logs, clear notes, clear files, or delete project
+        //    Change delete project to edit project and have it pop up a dialog to edit the name, clear logs, clear notes, clear files, or delete project
+        // Add debug mode where errors will get displayed immediately.
+        // Add custom data file location
 
         public MainWindow()
         {
