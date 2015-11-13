@@ -18,6 +18,19 @@ namespace ProjectManager
             GetSettingsFromFile();
         }
 
+        /* Procedure for adding another user setting:
+         * - Add the field to store the value at the bottom of this file
+         * - Add the string key for this setting in the settings file
+         * - Add default value in ResetToDefaults()
+         * - Add case for key in GetSettingsFromFile()
+         * - Add UI item to set/view the value
+         * - Implement the value in the code
+         * 
+         * If the new setting has an enum:
+         * - Define the enum at the bottom of this file
+         * - Create maps to map the possible values to their string equivalents
+        */
+
         //------------------//
         // External Methods //
         //------------------//
@@ -27,6 +40,7 @@ namespace ProjectManager
             HiddenProjects = new List<Project>();
             SummarySortByTime = false;
             SummaryIgnoreHiddenProjects = false;
+            DebugModeOn = false;
         }
 
         /// <summary>
@@ -63,6 +77,10 @@ namespace ProjectManager
 
                     case summaryIgnoreHiddenProjectsKey:
                         SummaryIgnoreHiddenProjects = pair.Value.ToLower() == "true";
+                        break;
+
+                    case debugModeOnKey:
+                        DebugModeOn = pair.Value.ToLower() == "true";
                         break;
 
                     default:
@@ -164,24 +182,31 @@ namespace ProjectManager
         //------//
         // Data //
         //------//
+        // Project Sorting
         public static SortingMethod ProjectSortingMethod { get; set; }
         public static string ProjectSortingMethodString 
         {
             get { return GetStringFromSortingMethod(ProjectSortingMethod); }
         }
 
+        // Project Hiding
         public static List<Project> HiddenProjects { get; set; }
 
+        // Summary Options
         public static bool SummarySortByTime { get; set; }
         public static bool SummaryIgnoreHiddenProjects { get; set; }
 
-        // string keys
+        // Error Options
+        public static bool DebugModeOn { get; set; }
+
+        // String Keys
         public const string sortingMethodKey = "sorting_method";
         public const string hiddenProjectsKey = "hidden_projects";
         public const string summarySortByTimeKey = "summary_sort_by_time";
         public const string summaryIgnoreHiddenProjectsKey = "summary_ignore_hidden_projects";
+        public const string debugModeOnKey = "debug_mode_on";
 
-        // string maps
+        // String Maps
         private static Dictionary<SortingMethod, string> sortingMethodToString;
         private static Dictionary<string, SortingMethod> stringToSortingMethod;
     }

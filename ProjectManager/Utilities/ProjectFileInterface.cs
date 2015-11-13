@@ -21,6 +21,7 @@ namespace ProjectManager
             allProjectsFilename = Path.Combine(currDirectory, allProjectsFilename);
             allProjectsNotesFilename = Path.Combine(currDirectory, allProjectsNotesFilename);
             settingsFilename = Path.Combine(currDirectory, settingsFilename);
+            helpFilename = Path.Combine(currDirectory, helpFilename);
 
             projectLogsFilename = Path.Combine(currDirectory, projectLogsFilename);
             projectNotesFilename = Path.Combine(currDirectory, projectNotesFilename);
@@ -561,6 +562,12 @@ namespace ProjectManager
                 UserSettings.summaryIgnoreHiddenProjectsKey,
                 UserSettings.SummaryIgnoreHiddenProjects));
 
+            // Add the debug mode setting
+            newFileText.Append(string.Format(
+                settingsFileRow,
+                UserSettings.debugModeOnKey,
+                UserSettings.DebugModeOn));
+
             // Write the file
             try
             {
@@ -785,6 +792,21 @@ namespace ProjectManager
         }
 
         /// <summary>
+        /// Opens the program's help file.
+        /// </summary>
+        public static void OpenHelpFile()
+        {
+            try
+            {
+                Process.Start(helpFilename);
+            }
+            catch (FileNotFoundException e)
+            {
+                ErrorLogger.AddLog(string.Format("Error opening help file:\n{0}", e.Message), ErrorSeverity.HIGH);
+            }
+        }
+
+        /// <summary>
         /// Resets the notes file for the given project.
         /// </summary>
         /// <param name="project">The project whose notes file to open.</param>
@@ -904,6 +926,7 @@ namespace ProjectManager
         private static string allProjectsFilename = "data\\projects.txt";
         private static string allProjectsNotesFilename = "data\\notes.txt";
         private static string settingsFilename = "data\\settings.txt";
+        private static string helpFilename = "help.txt";
 
         private static string projectLogsFilename = "data\\logs\\{0}_{1}_logs.txt";
         private static string projectNotesFilename = "data\\notes\\{0}_{1}_notes.txt";

@@ -10,12 +10,12 @@
         <TextBlock Margin="0 5 0 10" Style="{StaticResource tbl_HeaderSmall}" Text="Edit Project"/>
 
         <!-- Edit Project Name -->
-        <TextBlock HorizontalAlignment="Center" Margin="0 0 0 5" Text="Project Name" FontWeight="Bold" />
+        <TextBlock HorizontalAlignment="Center" Margin="0 0 0 5" Style="{StaticResource tbl_Label}" Text="Project Name" />
         <TextBox Name="tb_ProjectName" Margin="10 0 10 5" />
         <Button Click="b_ResetName_Click" Content="Reset" Grid.Column="1" Margin="0 0 0 10" Name="b_ResetName" Width="100"/>
 
         <!-- Clear Project Data -->
-        <TextBlock HorizontalAlignment="Center" Margin="0 0 0 5" Text="Clear Project Data" FontWeight="Bold" />
+        <TextBlock HorizontalAlignment="Center" Margin="0 0 0 5" Style="{StaticResource tbl_Label}" Text="Clear Project Data"/>
         <Grid Margin="0 0 0 10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.33*" />

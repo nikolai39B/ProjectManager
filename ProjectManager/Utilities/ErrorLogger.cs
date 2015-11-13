@@ -92,14 +92,38 @@ namespace ProjectManager
 
                 // Write the file
                 File.WriteAllText(errorLogFilename, newFileContents.ToString());
+
+                // If we're in debug mode, pop up an error message
+                if (UserSettings.DebugModeOn)
+                {
+                    NotificationDialog window = new NotificationDialog("Error", 
+                        string.Format("This program experienced an error:\n{0}", log));
+                    window.ShowDialog();
+                }
             }
             catch (IOException e)
             {
                 // If we get here, something went pretty wrong. Let the user know.
                 NotificationDialog window = new NotificationDialog("Error",
-                    string.Format("This program encountered an error, and the error couldn't get logged.\n\nInitial error:\n{0}\n\nError log write error:\n{1}\n\nIf this problem persists, please contact us and let us know that it's happening.", log, e.Message));
+                    string.Format("This program encountered an error, and the error couldn't get logged.\n\nInitial error:\n{0}\n\nError log write error:\n{1}\n\n" + 
+                        "If this problem persists, please contact us and let us know that it's happening.", log, e.Message));
 
                 window.ShowDialog();
+            }
+        }
+
+        /// <summary>
+        /// Clears all error logs from the error log file.
+        /// </summary>
+        public static void ClearAllLogs()
+        {
+            try
+            {
+                File.WriteAllText(errorLogFilename, "");
+            }
+            catch (IOException e)
+            {
+                AddLog(string.Format("Could not clear error logs:\n{0}", e.Message), ErrorSeverity.LOW);
             }
         }
 

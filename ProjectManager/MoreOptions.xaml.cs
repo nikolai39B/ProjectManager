@@ -49,6 +49,8 @@ namespace ProjectManager
                     UserSettings.ProjectSortingMethod = pair.Value;
                 }
             }
+
+            UserSettings.DebugModeOn = cb_DebugMode.IsChecked == true;
         }
 
         //----------------//
@@ -64,6 +66,8 @@ namespace ProjectManager
                 // If this SortingMethod is selected, check the corresponding rb
                 pair.Value.IsChecked = pair.Key == UserSettings.ProjectSortingMethod;
             }
+
+            cb_DebugMode.IsChecked = UserSettings.DebugModeOn;
         }
 
         /// <summary>
@@ -106,14 +110,24 @@ namespace ProjectManager
             }
         }
 
+        private void b_OpenErrorLog_Click(object sender, RoutedEventArgs e)
+        {
+            ProjectFileInterface.OpenErrorLogFile();
+        }
+
+        private void b_ClearErrorLog_Click(object sender, RoutedEventArgs e)
+        {
+            ErrorLogger.ClearAllLogs();
+        }
+
         private void b_OpenNotes_Click(object sender, RoutedEventArgs e)
         {
             ProjectFileInterface.OpenNotesFile();
         }
 
-        private void b_OpenErrorLog_Click(object sender, RoutedEventArgs e)
+        private void b_Help_Click(object sender, RoutedEventArgs e)
         {
-            ProjectFileInterface.OpenErrorLogFile();
+            ProjectFileInterface.OpenHelpFile();
         }
 
         private void b_Defaults_Click(object sender, RoutedEventArgs e)

@@ -11,7 +11,7 @@
         <!-- Contents -->
         <StackPanel Height="205" Margin="0 0 0 15">
             <!-- Project Sorting -->
-            <TextBlock Margin="0 0 0 5" Style="{StaticResource tbl_HeaderSmall}" Text="Project Sorting" />
+            <TextBlock Margin="0 0 0 5" Style="{StaticResource tbl_Label}" Text="Project Sorting" />
             <Grid Margin="0 0 0 10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="0.25*" />
@@ -26,7 +26,7 @@
             </Grid>
 
             <!-- Project Management -->
-            <TextBlock Margin="0 0 0 5" Style="{StaticResource tbl_HeaderSmall}" Text="Manage Projects" />
+            <TextBlock Margin="0 0 0 5" Style="{StaticResource tbl_Label}" Text="Manage Projects" />
             <Grid Margin="0 0 0 10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="0.5*" />
@@ -35,6 +35,20 @@
                 <Button Click="b_HideProjects_Click" Content="Hide Projects" Grid.Column="0" Name="b_HideProjects" Width="120" />
                 <Button Click="b_ClearProjects_Click" Content="Clear Projects" Grid.Column="1" Name="b_ClearProjects" Width="120" />
             </Grid>
+
+            <!-- Error Handling -->
+            <TextBlock Margin="0 0 0 5" Style="{StaticResource tbl_Label}" Text="Error Handling" />
+            <Grid Margin="0 0 0 10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.33*" />
+                    <ColumnDefinition Width="0.33*" />
+                    <ColumnDefinition Width="0.33*" />
+                </Grid.ColumnDefinitions>
+                <CheckBox Content="Debug Mode" HorizontalAlignment="Center" Name="cb_DebugMode" VerticalAlignment="Center"/>
+                <Button Click="b_OpenErrorLog_Click" Content="Open Error Log" Grid.Column="1" Name="b_OpenErrorLog" Width="120" />
+                <Button Click="b_ClearErrorLog_Click" Content="Clear Error Log" Grid.Column="2" Name="b_ClearErrorLog" Width="120" />
+            </Grid>
+
         </StackPanel>
 
         <!-- Utility Buttons -->
@@ -46,7 +60,7 @@
                 <ColumnDefinition Width="0.25*"/>
             </Grid.ColumnDefinitions>
             <Button Click="b_OpenNotes_Click" Content="Open Notes" Grid.Column="0" Name="b_OpenNotes" Width="100" />
-            <Button Click="b_OpenErrorLog_Click" Content="Open Error Log" Grid.Column="1" Name="b_OpenErrorLog" Width="100" />
+            <Button Click="b_Help_Click" Content="Help" Grid.Column="1" Name="b_Help" Width="100" />
             <Button Click="b_Defaults_Click" Content="Defaults" Grid.Column="2" Name="b_Defaults" Width="100" />
             <Button Click="b_Back_Click" Content="Back" Grid.Column="3" Name="b_Back" Width="100" />
         </Grid>
