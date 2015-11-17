@@ -27,6 +27,10 @@ namespace ProjectManager
             projectNotesFilename = Path.Combine(currDirectory, projectNotesFilename);
             projectFilesFilename = Path.Combine(currDirectory, projectFilesFilename);
 
+            allProjectsNotesFileTemplateFilename = Path.Combine(currDirectory, allProjectsNotesFileTemplateFilename);
+            projectNotesFileTemplateFilename = Path.Combine(currDirectory, projectNotesFileTemplateFilename);
+            timeStampTemplateFilename = Path.Combine(currDirectory, timeStampTemplateFilename);
+
             // Create all the necessary directories
             foreach (var dir in requiredDirectories)
             {
@@ -51,6 +55,11 @@ namespace ProjectManager
                     File.WriteAllText(file.Key, file.Value);
                 }
             }
+
+            // Load the custom templates
+            LoadTemplateFromFile(allProjectsNotesFileTemplateFilename, out customAllProjectsNotesFileTemplate);
+            LoadTemplateFromFile(projectNotesFileTemplateFilename, out customProjectNotesFileTemplate);
+            LoadTemplateFromFile(timeStampTemplateFilename, out customTimeStampTemplate);
         }
 
         //---------------//
@@ -597,7 +606,7 @@ namespace ProjectManager
             string notesFilename = GetFileNameForProject(project, FileType.NOTES);
             if (overwrite || !File.Exists(notesFilename))
             {
-                File.WriteAllText(notesFilename, string.Format(projectNotesFileTemplate, project.Name));
+                File.WriteAllText(notesFilename, GetProjectNotesFileHeader(project.Name));
             }
 
             // Files file
@@ -632,8 +641,8 @@ namespace ProjectManager
             try
             {
                 // Form the file headers
-                string oldNotesHeader = string.Format(projectNotesFileTemplate, oldName);
-                string newNotesHeader = string.Format(projectNotesFileTemplate, project.Name);
+                string oldNotesHeader = GetProjectNotesFileHeader(oldName);
+                string newNotesHeader = GetProjectNotesFileHeader(project.Name);
 
                 // Read in the notes text
                 notesText.Append(File.ReadAllText(oldNotesFilename));
@@ -745,7 +754,7 @@ namespace ProjectManager
                 { 
                     if (!File.Exists(notesFilename))
                     {
-                        File.WriteAllText(notesFilename, allProjectsNotesFileTemplate);
+                        File.WriteAllText(notesFilename, GetAllProjectsNotesFileHeader());
                     }
                 }
                 catch (IOException e)
@@ -758,7 +767,7 @@ namespace ProjectManager
             // Append a timestamp to the notes file
             try
             {
-                File.AppendAllText(notesFilename, string.Format(timeStampTemplate, DateTime.Now.ToString()));
+                File.AppendAllText(notesFilename, GetTimeStamp(DateTime.Now.ToString()));
             }
             catch (IOException e)
             {
@@ -820,7 +829,7 @@ namespace ProjectManager
             string notesFilename = GetFileNameForProject(project, FileType.NOTES);
             try
             {
-                File.WriteAllText(notesFilename, string.Format(projectNotesFileTemplate, project.Name));
+                File.WriteAllText(notesFilename, GetProjectNotesFileHeader(project.Name));
             }
             catch (IOException e)
             {
@@ -911,26 +920,38 @@ namespace ProjectManager
             }
         }
 
-        //----------//
-        // Metadata //
-        //----------//
-        static int highestProjectIdInUse = -1;
-        static Dictionary<int, int> highestLogIdsInUse;
-        const char commentCharacter = '#';
-        const string incomplete = "Incomplete";
-        const string complete = "Complete";
+        //----------------//
+        // Helper Methods //
+        //----------------//
+        /// <summary>
+        /// Attempts to load the contents of the given file into the given template variable.
+        /// </summary>
+        /// <param name="templateFilename">The path to the file containing the template.</param>
+        /// <param name="template">The variable to store the template in. Set to null if the template couldn't be read.</param>
+        /// <returns>True if successful, false otherwise.</returns>
+        private static bool LoadTemplateFromFile(string templateFilename, out string template)
+        {
+            if (!File.Exists(templateFilename))
+            {
+                // We couldn't find the file
+                template = null;
+                return false;
+            }
 
-        //-----------//
-        // Filenames //
-        //-----------//
-        private static string allProjectsFilename = "data\\projects.txt";
-        private static string allProjectsNotesFilename = "data\\notes.txt";
-        private static string settingsFilename = "data\\settings.txt";
-        private static string helpFilename = "help.txt";
-
-        private static string projectLogsFilename = "data\\logs\\{0}_{1}_logs.txt";
-        private static string projectNotesFilename = "data\\notes\\{0}_{1}_notes.txt";
-        private static string projectFilesFilename = "data\\files\\{0}_{1}_files.txt";
+            // Try to read the template from the file
+            try
+            {
+                template = File.ReadAllText(templateFilename);
+                return true;
+            }
+            catch (IOException e)
+            {
+                // We failed to read the file
+                ErrorLogger.AddLog(string.Format("Failed to load template from file {0}:\n{1}", templateFilename, e.Message), ErrorSeverity.MODERATE);
+                template = null;
+                return false;
+            }
+        }
 
         /// <summary>
         /// Returns the filename of the given type for the given project. Will throw an ArgumentException
@@ -986,6 +1007,97 @@ namespace ProjectManager
             return string.Format(filenameTemplate, projectId, legalProjectName);
         }
 
+        /// <summary>
+        /// Gets the all projects notes file header, using the custom template if possible.
+        /// </summary>
+        /// <returns>The all projects notes file header.</returns>
+        private static string GetAllProjectsNotesFileHeader()
+        {
+            if (customAllProjectsNotesFileTemplate != null)
+            {
+                return customAllProjectsNotesFileTemplate;
+            }
+            return allProjectsNotesFileTemplate;
+        }
+
+        /// <summary>
+        /// Gets the project notes file header for the project with the given name, using the custom template if possible.
+        /// </summary>
+        /// <param name="projectName">The name of the project whose notes file header to get.</param>
+        /// <returns>The project notes file header.</returns>
+        private static string GetProjectNotesFileHeader(string projectName)
+        {
+            string header = string.Format(projectNotesFileTemplate, projectName);
+
+            // Use the custom template if possible  
+            if (customProjectNotesFileTemplate != null)
+            {
+                try
+                {
+                    header = string.Format(customProjectNotesFileTemplate, projectName);
+                }
+                catch (FormatException e)
+                {
+                    ErrorLogger.AddLog(string.Format("Could not use custom project notes file template; using default template instead:\n{0}", e.Message), ErrorSeverity.LOW);
+                }
+            }
+
+            return header;
+        }
+
+        /// <summary>
+        /// Gets the time stamp for the given datetime, using the custom template if possible.
+        /// </summary>
+        /// <param name="datetime">The datetime whose time stamp to return.</param>
+        /// <returns>The time stamp.</returns>
+        private static string GetTimeStamp(string datetime)
+        {
+            string timeStamp = string.Format(timeStampTemplate, datetime);
+
+            // Use the custom template if possible  
+            if (customTimeStampTemplate != null)
+            {
+                try
+                {
+                    timeStamp = string.Format(customTimeStampTemplate, datetime);
+                }
+                catch (FormatException e)
+                {
+                    ErrorLogger.AddLog(string.Format("Could not use custom time stamp template; using default template instead:\n{0}", e.Message), ErrorSeverity.LOW);
+                }
+            }
+
+            return timeStamp;
+        }
+
+        //----------//
+        // Metadata //
+        //----------//
+        static int highestProjectIdInUse = -1;
+        static Dictionary<int, int> highestLogIdsInUse;
+        const char commentCharacter = '#';
+        const string incomplete = "Incomplete";
+        const string complete = "Complete";
+
+        //-----------//
+        // Filenames //
+        //-----------//
+        // Common files
+        private static string allProjectsFilename = "data\\projects.txt";
+        private static string allProjectsNotesFilename = "data\\notes.txt";
+        private static string settingsFilename = "data\\settings.txt";
+        private static string helpFilename = "help.txt";
+
+        // Project files
+        private static string projectLogsFilename = "data\\logs\\{0}_{1}_logs.txt";
+        private static string projectNotesFilename = "data\\notes\\{0}_{1}_notes.txt";
+        private static string projectFilesFilename = "data\\files\\{0}_{1}_files.txt";
+
+        // Template files
+        private static string allProjectsNotesFileTemplateFilename = "templates\\allProjectsNotesFileTemplate.txt";
+        private static string projectNotesFileTemplateFilename = "templates\\projectNotesFileTemplate.txt";
+        private static string timeStampTemplateFilename = "templates\\timeStampTemplate.txt";
+
         private enum FileType
         {
             LOGS,
@@ -1009,6 +1121,7 @@ namespace ProjectManager
         private const string allProjectsNotesFileTemplate = "# Common Notes File\n";
         /* # Common Notes File
          */
+        private static string customAllProjectsNotesFileTemplate = null;
         private const string settingsFileTemplate = "# Warning: Do not edit by hand\n#\n# SETTINGS FILE\n#\n# Format: setting|value\n\n";
         /* # Warning: Do not edit by hand
          * #
@@ -1031,6 +1144,7 @@ namespace ProjectManager
         private const string projectNotesFileTemplate = "# Notes for Project {0}\n";
         /* # Notes for Project {0} 
          */
+        private static string customProjectNotesFileTemplate = null;
         private const string projectFilesFileTemplate = "# Warning: Do not edit by hand\n#\n# FILES FILE\n#\n# Project: {0}\n# Id: {1}\n#\n# Format: file title|file|is file flag|program to open\n\n";
         /* # Warning: Do not edit by hand
          * #
@@ -1051,6 +1165,8 @@ namespace ProjectManager
          * ** {0} **
          *  
          * 
+         * 
          */
+        private static string customTimeStampTemplate = null;
     }
 }
