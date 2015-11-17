@@ -24,7 +24,7 @@ namespace ProjectManager
             InitializeComponent();
         }
 
-        public NewProjectDialog(string title, string nameDefault, string acceptButtonText)
+        /*public NewProjectDialog(string title, string nameDefault, string acceptButtonText)
             : this()
         {
             // This constructor gives some flexibility for editing the project name
@@ -32,7 +32,7 @@ namespace ProjectManager
             tbl_Title.Text = title;
             tb_ProjectName.Text = nameDefault;
             b_Create.Content = acceptButtonText;
-        }
+        }*/
 
         public string NewProjectName
         {

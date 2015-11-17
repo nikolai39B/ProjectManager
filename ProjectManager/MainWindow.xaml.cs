@@ -24,10 +24,11 @@ namespace ProjectManager
         // Add backup feature
         // Warn on close if incomplete logs still present
         // Add files to home page (common files)
-        // Move summary to more page
         // Add help file
         // Add rmb option on open notes to not add timestamp
         // Add custom data file location
+        // Add option to disable timestamping
+        // Add ability to customize templates
 
         public MainWindow()
         {

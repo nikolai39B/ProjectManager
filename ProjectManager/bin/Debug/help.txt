@@ -1,4 +1,4 @@
-####################################################################
+ ##################################################################
    _____   _____    ____        _  ______   ____   ______           
    |    \  |    \  /    \       |  |       /    \    |              
    |    |  |    |  |    |       |  |       |    |    |              
@@ -14,47 +14,310 @@
            |    |  |    |  |    |  |    |  |    |  |       |   \    
            |    |  |    |  |    |  |    |  \____/  |_____  |    \   
                                                                     
-####################################################################
+ ##################################################################
 
     Author:     Will Hauber
-    Version:    0.1.0.0
-    Date:       Nov 13, 2015
+    Date:       November 13, 2015
+    Script Ver: 1.0
+    Help Ver:   1
+    Source:     https://github.com/nikolai39B/ProjectManager
     
-####################################################################
+ ##################################################################
  
     TABLE OF CONTENTS
         
 1.  About
-2.  Creating Projects
+2.  Projects
+    a.  Creating a Project
+    b.  Editing a Project's Name
+    c.  Deleting a Project
 3.  Notes
     a.  Opening Notes
-    b.  Time Stamping
-    c.  Clearing Notes
-    d.  Common Notes
+    b.  Clearing Notes
+    c.  Common Notes
 4.  Logs
-    a.  Creating a Logs
-    b.  Finishing a Logs
-    c.  Viewing Old Logs
+    a.  Creating a Log
+    b.  Finishing a Log
+    c.  Editing Logs
     d.  Log Summary
     e.  Clearing Logs
 5.  Files
     a.  Adding a File
     b.  Adding a Url
     c.  Opening Files
-    d.  Clearing Files
+    d.  Editing Files
+    e.  Clearing Files
 6.  Managing Projects
     a.  Sorting Projects
-    b.  Projects Summary
-    c.  Hiding Projects
-    d.  Clearing Projects    
+    b.  Hiding Projects
+    c.  Clearing Projects 
+    d.  Projects Summary   
 7.  Errors
     a.  Viewing Errors
     b.  Clearing Errors
-    c.  Debug Mode
+    c.  Reporting Errors
+    d.  Debug Mode
     
-####################################################################
+ ##################################################################
 
 1.  ABOUT
 
+Thanks for using Project Manager! I hope you find that it helps you keep all of your different tasks organized and 
+manageable. Project Manager is designed to let you quickly distinguish between different projects and keep notes, logs,
+and files for each. There's quite a few features and options in here, and I'll give you details about each.
 
+If you have any questions, comments, or suggestions, feel free to contact me at nikolai39B@gmail.com.
     
+ ##################################################################
+
+2.  PROJECTS
+
+    a.  CREATING A PROJECT
+
+    To get started using Project Manager, you first have to great a project. From the home page (which says "Project
+    Manager" at the top), find the "New Project" button at the bottom left. Clicking this button will launch a dialog
+    which will prompt you for the new project's name. Type in the name of your project and click "Create". Note that
+    the project's name cannot be blank and cannot contain pipes (the '|' character).
+    
+    When you create a project, Project Manager generates three empty files for it. The first is for project notes, the
+    second is for project logs, and the third is for project files. The default directory for these files is under
+    the "data" directory, which is in the same location as ProjectManager.exe. It's not recommended to manually edit the 
+    file for either the project logs or the project files, as doing so incorrectly can cause issues when Project Manager
+    tries to parse the information contained in them.
+        
+    Once you've created your new project, you should be sent to its project page. Here you can add logs and files, edit
+    the project's notes, get a summary of the work you've done, and edit details about the project. We'll go over these
+    options shortly.
+    
+    
+    b.  EDITING A PROJECT'S NAME
+    
+    At some point while you're working on your project, you might wish to change the project's name. That's a simple task
+    to do. From the project's page (which should have the project's name at the top) find and click the "Edit Project" 
+    button at the bottom. Doing so should pop up a dialog, the first section of which is titled "Project Name". In the
+    provided text box, type in the new name for your project and click "Apply" at the bottom.
+    
+    Clicking the "Reset" button at underneath the text box will reset the contents of the text box to the project's current
+    title. Note that clicking this button does not actually change the name of the project until you hit "Apply".
+    
+    
+    c.  DELETING A PROJECT
+    
+    Deleting a project is permanent, and deletes all of the underlying data for the project. Thus, before you delete a
+    project, be sure that you don't want any of this information. Also be aware of the project hiding functionality, 
+    discussed in section 6b.
+    
+    If you're sure that you want to delete a project, go to the project's page and click "Edit Project" at the bottom.
+    This should pop up a dialog with a "Delete" button at the bottom. Clicking this button will launch one final 
+    confirmation window, and pressing "Yes" in this dialog will delete the project.
+    
+ ##################################################################
+    
+3.  NOTES
+
+    a.  OPENING NOTES
+    
+    The ability to organize notes for all your projects is a key feature of Project Manager. When you create a project,
+    its notes file is automatically generated at [location of ProjectManager.exe]/data/notes. You could manaually
+    navigate to this directory, find this file, and open it, but Project Manager simplifies this task. Simply clicking
+    the "Open Notes" button at the bottom left of a project's page will open up its notes. 
+    
+    Furthermore, when you click this button, Project Manager will add a timestamp to the notes file. This helps you
+    keep track of when you made certain notes. However, do be warned that adding this change involves opening and resaving
+    the notes file. Thus, if you click this button when you have unsaved changes in the notes file, those changes will
+    be lost. To avoid this, simply make sure that the notes file is closed or saved before clicking "Open Notes".
+    
+    
+    b.  CLEARING NOTES
+    
+    If you wish to clear all notes in the notes file, you have two options. First, you could open the notes file, delete
+    everything, then save the file. The second option is to use Project Manager. From a project page, click "Edit Project",
+    check "Notes" under the Clear Project Data category, and hit "Apply". Project Manager will prompt you for confirmation,
+    and if you accept, the project's notes file will be reset to it's default state.
+    
+     
+    c.  COMMON NOTES
+    
+    Project Manager also has a notes file not associated with any project. This file is located at [location of 
+    ProjectManager.exe]/data, but is also accessible by clicking "More" on the home page, then clicking "Open Notes".
+    This file behaves very similarly to the project notes file, but is for notes involving multiple projects.
+    
+ ##################################################################
+ 
+4.  LOGS
+
+    a.  CREATING A LOG
+    
+    In Project Manager, logs serve two main purposes. First, they give you some idea of what you worked on and when you
+    worked on it. They also track the total time spent on each step and on the project as a whole. Starting a new logs is
+    quite simple; simply click the "New Log" button at the top of a project page. If you don't see the "New Log" button and
+    instead see an "Add File" button, click the "Logs" button in the top right. 
+    
+    When you click "New Log", Project Manager will prompt you for a description for the log. This description may not be 
+    blank and cannot contain pipes (the '|' character). Once you've typed your description, click the "Create" button to 
+    create the log. Project Manager will automatically set the current date and time as the start time for the log.
+    
+    b.  FINISHING A LOG
+    
+    Once you have completed a task for your project, you should finish the log for that task. Assuming you started a log
+    (using the method described in 4a), you should have an in-progress log at the top of the project page. If you don't see
+    your in-progress log and instead see an "Add File" button, click the "Logs" button in the top right. 
+    
+    Once you see your in-progress log, click the "Finish Log" button to finish the log. Doing so will set the current date 
+    and time as the end time for the log. In addition, the now completed log will appear in the area below.
+    
+    c. EDITING LOGS
+    
+    Project Manager allows you view and edit previously created logs. First, make sure you are looking at the list of logs.
+    You should be on a project page with the button "Files" in the top right. If the button in the top right say "Logs"
+    instead, click it.
+    
+    To view or edit a log, first find it in the list. The logs are ordered by start time and the description for each log
+    is displayed as well. Once you've found the log in question, click the "View" button to the right of the log's 
+    description. Doing so will pop up a dialog with three fields in it: the start time, the end time, and the description.
+    You may edit any of these fields then click "Save" to apply the changed. Note that the start time must be before the
+    end time, and the description cannot be blank or contain pipes.
+    
+    To cancel making changes, click the "Cancel" button. In addition, if you wish to delete the log, click "Delete" and
+    answer yes to the confirmation dialog that appears.
+    
+    d.  LOG SUMMARY
+    
+    Project Manager can give you a summary for the logs in each project. To view this summary, click the "Summary" button at
+    the bottom of a project page. When you click this button, a new window will appear. This window lists all of the log
+    descriptions along with their total time. At the bottom of this window is the total time spent on the project (the sum
+    of the total time spent for each log). By default, the logs are sorted with the newest at the top, but if you check the
+    "Sort By Time" check box, the logs will be sorted with the longest at the top instead.
+    
+    e.  CLEARING LOGS
+    
+    While logs can be manually deleted one-by-one, you may wish to clear all logs at once. To do so, click the "Edit 
+    Project" button at the bottom of a project page. In the dialog that appears, check "Logs" under the Clear Project Data
+    category. Then press "Apply". In the confirmation window that appears, check to make sure that project logs are
+    specified, then click yes. This will remove all logs (including the current in-progress log, if there is one) from
+    the project.
+    
+ ##################################################################
+ 
+5.  FILES
+
+    a.  ADDING A FILE
+    
+    Project Manager will allow you to associate files with a given project. Doing so allows you to open these files directly
+    from the project page. To add a file, first go to a project page. If there is a button labeled "Files" in the top right,
+    click it. Then click the "Add File" button.
+    
+    In the dialog that appears, first make sure that the "File" radio button is selected. Then provide a title for the file
+    note that this title does not need to be the same as the file name; the title is simply how you will identify the file
+    from Project Manager. The title cannot contain pipes and cannot be blank.
+    
+    Once you've added a title, click the "Browse" button next to the words "File to open...". Doing so will launch a file
+    explorer window with which you can select a file. Find the file you wish to add, then click "Open". The file's name
+    should replace the "File to open..." text.
+    
+    By default, Project Manager will open your chosen file with the default program for that type of file. However, if you
+    wish to specify a specific program to open your file with, you may do so. First, uncheck the "Open with Default" check
+    box. Another "Browse" button will pop up, and the text "Open with..." should appear to its right. Click this button
+    and select the program with which to open the file. If you wish to use the default program, simply recheck the "Open
+    with Default" check box.
+    
+    Once you have specified all of the necessary details for your file, click "Add" to add the file.
+    
+    b.  ADDING A URL
+    
+    Adding a url to a project follows almost exactly the same procedure as adding a file. The only difference is that 
+    instead of selecting the radio button labeled "File", you should instead select the one labeled "Url". Doing so will
+    replace the "Browse" button with a "Url" field. Type in the url here, then click "Add" to add the file. You may also
+    specify a specific browser in the same way that you specify the program to open when adding a file (this process is
+    outlined in 5a).
+    
+    c.  OPENING FILES
+    
+    When you add a file or a url, it should appear in the space below the "Add File" button. If you don't see your files
+    or the "Add File" button, look for and click a "Files" button in the top right. To open a file is simple; just click
+    the "Launch" button to the right of the file's title.
+    
+    d.  EDITING FILES
+    
+    You cannot edit a file directly through Project Manager, but you can edit the details that project manager has about
+    that file. To do so, first find the file's title on the project page, then click the "View" button to the right of it.
+    This will launch a dialog similar to the dialog for adding a file. Once you have made your changes in the dialog, click
+    "Save" to apply them. The procedure for editing a file is similar to adding a file, so if you are uncertain about some 
+    of the options here, please refer to 5a. The main addition to this dialog is the "Delete" button at the bottom. Clicking 
+    this button then clicking yes in the confirmation dialog will remove the file from Project Manager. It will not delete 
+    the file from your computer.
+    
+    e.  CLEARING FILES
+    
+    While files can be manually deleted one-by-one, you may wish to clear all files at once. To do so, click the "Edit 
+    Project" button at the bottom of a project page. In the dialog that appears, check "Files" under the Clear Project Data
+    category. Then press "Apply". In the confirmation window that appears, check to make sure that project files are
+    specified, then click yes. This will remove all files from the project.
+    
+ ##################################################################
+
+6.  MANAGING PROJECTS
+
+    a.  SORTING PROJECTS
+    
+    Project Manager displays all of your projects on the home page. If you have many different projects, it may be difficult
+    to find yours in the list. To make this easier, Project Manager will allow you to sort your projects a number of 
+    different ways. To do this, first click "More" at the bottom of the home page, then find the Project Sorting category.
+    You can sort oldest first, newest first (the default), by name A to Z, or by name Z to A. To change the sorting method,
+    simply select that method's radio button. One you go back to the home page, your projects will be sorted in that way.
+    
+    b.  HIDING PROJECTS
+    
+    If you have too many old projects, sometimes simply sorting them is not enough. However, you may not want to delete 
+    these projects either. Luckily, Project Manager will let you hide projects from the home screen without actually
+    removing any of their data. To hide a project, click the "More" button at the bottom of the home page, then click
+    the "Hide Projects" button in the middle of the screen. This will pop up a dialog listing all of the projects that you
+    have. To hide a project, check the "Hide" check box to the right of the project's title. To stop hiding a project, 
+    uncheck this box. If you want to show or hide all projects, click the "Show All" or "Hide All" buttons respectively.
+    To save your changes and exit the dialog, click "Save". Next time you are back at the home page, you should notice
+    that the projects you checked are missing.
+    
+    c.  CLEARING PROJECTS
+    
+    While projects can be manually deleted one-by-one, you may wish to clear all project at once. To do so, click the 
+    "More" button at the bottom of the home page, then click the "Clear Projects" button in the middle of the screen.
+    If you are sure that you wish to delete all of the projects, click yes in the confirmation dialog that appears. Doing
+    so will delete all data for every project, including hidden projects.
+    
+    d.  PROJECTS SUMMARY
+    
+    Just as you can view a summary for a specific project, you can also view a summary for all of your projects. From the
+    home page, click the "Summary" button at the bottom of the screen. This will open a window with all of your projects
+    listed. By default, the projects are sorted according to the sorting method you specified (or by newest at the top by
+    default). If you wish to sort by time instead, click the "Sort By Time" check box at the bottom. In addition, all 
+    projects, including hidden projects, are displayed and included in the total time. If you wish to exclude these 
+    projects, check the "Ignore Hidden Projects" check box at the bottom.
+    
+ ##################################################################
+ 
+7.  ERRORS
+
+    a.  VIEWING ERRORS
+    
+    It's possible that something could go wrong during Project Manager's execution. In most cases, these errors fail
+    silently, but they still have a log added to the error log file. To view these errors, click the "More" option at the
+    bottom of the home page, then click the "Open Error Log" button. This will open an file containing an entry for each
+    error that had occurred.
+    
+    b.  CLEARING ERRORS
+    
+    If you wish to clear the error log, click the "More" option at the bottom of the home page, then click the "Clear Error
+    Log" button. Doing so will erase all entries in the error log file, so only do this if you are sure that you don't
+    care about any of the errors recorded there.
+    
+    c.  REPORTING ERRORS
+    
+    If you experience unexpected behavior from Project Manager, please let me know at nikolai39B@gmail.com. In addition,
+    please attach the error log file (or at least the relevant error logs) to your message. I'll take a look at the problem
+    as soon as I can and get back to you with a solution.
+    
+    d.  DEBUG MODE
+    
+    In debug mode, you will be alerted or any errors that occur right when they occur in the form of a pop-up dialog. The
+    errors will still be logged in the error log file. You should enable this mode if you want to know immediately when an
+    error occurs. To enable this mode, click "More" from the home page then check the "Debug Mode" check box.
