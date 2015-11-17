@@ -1,28 +1,28 @@
- ##################################################################
-   _____   _____    ____        _  ______   ____   ______           
-   |    \  |    \  /    \       |  |       /    \    |              
-   |    |  |    |  |    |       |  |       |    |    |              
-   |____/  |____/  |    |  _    |  |___    |         |              
-   |       |  \    |    |  |    |  |       |         |              
-   |       |   \   |    |  |    |  |       |    |    |              
-   |       |    \  \____/  \____/  |_____  \____/    |              
-           _    _          _    _           ____   ______  _____    
-           |\  /|    /\    |\   |    /\    /    \  |       |    \   
-           | \/ |   /  \   | \  |   /  \   |    |  |       |    |   
-           |    |  /    \  |  \ |  /    \  |  ___  |_____  |____/   
-           |    |  |____|  |   \|  |____|  |    |  |       |  \     
-           |    |  |    |  |    |  |    |  |    |  |       |   \    
-           |    |  |    |  |    |  |    |  \____/  |_____  |    \   
+ ###########################################################################################################################
+                            _____   _____    ____        _  ______   ____   ______           
+                            |    \  |    \  /    \       |  |       /    \    |              
+                            |    |  |    |  |    |       |  |       |    |    |              
+                            |____/  |____/  |    |  _    |  |___    |         |              
+                            |       |  \    |    |  |    |  |       |         |              
+                            |       |   \   |    |  |    |  |       |    |    |              
+                            |       |    \  \____/  \____/  |_____  \____/    |              
+                                    _    _          _    _           ____   ______  _____    
+                                    |\  /|    /\    |\   |    /\    /    \  |       |    \   
+                                    | \/ |   /  \   | \  |   /  \   |    |  |       |    |   
+                                    |    |  /    \  |  \ |  /    \  |  ___  |_____  |____/   
+                                    |    |  |____|  |   \|  |____|  |    |  |       |  \     
+                                    |    |  |    |  |    |  |    |  |    |  |       |   \    
+                                    |    |  |    |  |    |  |    |  \____/  |_____  |    \   
                                                                     
- ##################################################################
+ ###########################################################################################################################
 
     Author:     Will Hauber
     Date:       November 13, 2015
-    Script Ver: 1.0
-    Help Ver:   1
+    Script Ver: 1.0.1
+    Help Ver:   2
     Source:     https://github.com/nikolai39B/ProjectManager
     
- ##################################################################
+ ###########################################################################################################################
  
     TABLE OF CONTENTS
         
@@ -35,6 +35,7 @@
     a.  Opening Notes
     b.  Clearing Notes
     c.  Common Notes
+    d.  Notes Templates
 4.  Logs
     a.  Creating a Log
     b.  Finishing a Log
@@ -58,7 +59,7 @@
     c.  Reporting Errors
     d.  Debug Mode
     
- ##################################################################
+ ###########################################################################################################################
 
 1.  ABOUT
 
@@ -68,7 +69,7 @@ and files for each. There's quite a few features and options in here, and I'll g
 
 If you have any questions, comments, or suggestions, feel free to contact me at nikolai39B@gmail.com.
     
- ##################################################################
+ ###########################################################################################################################
 
 2.  PROJECTS
 
@@ -111,7 +112,7 @@ If you have any questions, comments, or suggestions, feel free to contact me at 
     This should pop up a dialog with a "Delete" button at the bottom. Clicking this button will launch one final 
     confirmation window, and pressing "Yes" in this dialog will delete the project.
     
- ##################################################################
+ ###########################################################################################################################
     
 3.  NOTES
 
@@ -142,7 +143,17 @@ If you have any questions, comments, or suggestions, feel free to contact me at 
     ProjectManager.exe]/data, but is also accessible by clicking "More" on the home page, then clicking "Open Notes".
     This file behaves very similarly to the project notes file, but is for notes involving multiple projects.
     
- ##################################################################
+    d.  NOTES TEMPLATES
+    
+    When a new notes file is created, Project Manager uses templates to create the header for the file. Project Manager also
+    has a template for the time stamp that it places in the notes files when you open them. These templates are stored
+    at [location of ProjectManager.exe]/templates and are editable if you wish to change them. The first file is called
+    allProjectsNotesFileTemplate.txt, and is the header for the common notes file. The second file is 
+    projectNotesFileTemplate.txt, and it the header for the project notes files. This template contains the string '{0}',
+    which is substituted with the project name. The final file is timeStampTemplate.txt, which is the template for the
+    time stamps that Project Manager creates. This template also contains '{0}', which turns into the datetime string.
+    
+ ###########################################################################################################################
  
 4.  LOGS
 
@@ -197,7 +208,7 @@ If you have any questions, comments, or suggestions, feel free to contact me at 
     specified, then click yes. This will remove all logs (including the current in-progress log, if there is one) from
     the project.
     
- ##################################################################
+ ###########################################################################################################################
  
 5.  FILES
 
@@ -254,7 +265,7 @@ If you have any questions, comments, or suggestions, feel free to contact me at 
     category. Then press "Apply". In the confirmation window that appears, check to make sure that project files are
     specified, then click yes. This will remove all files from the project.
     
- ##################################################################
+ ###########################################################################################################################
 
 6.  MANAGING PROJECTS
 
@@ -293,7 +304,7 @@ If you have any questions, comments, or suggestions, feel free to contact me at 
     projects, including hidden projects, are displayed and included in the total time. If you wish to exclude these 
     projects, check the "Ignore Hidden Projects" check box at the bottom.
     
- ##################################################################
+ ###########################################################################################################################
  
 7.  ERRORS
 
