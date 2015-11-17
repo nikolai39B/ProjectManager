@@ -147,11 +147,15 @@ If you have any questions, comments, or suggestions, feel free to contact me at 
     
     When a new notes file is created, Project Manager uses templates to create the header for the file. Project Manager also
     has a template for the time stamp that it places in the notes files when you open them. These templates are stored
-    at [location of ProjectManager.exe]/templates and are editable if you wish to change them. The first file is called
-    allProjectsNotesFileTemplate.txt, and is the header for the common notes file. The second file is 
-    projectNotesFileTemplate.txt, and it the header for the project notes files. This template contains the string '{0}',
+    at [location of ProjectManager.exe]/templates and are editable if you wish to change them. 
+    
+    The first file is called allProjectsNotesFileTemplate.txt, and is the header for the common notes file. The second file 
+    is projectNotesFileTemplate.txt, and it the header for the project notes files. This template contains the string '{0}',
     which is substituted with the project name. The final file is timeStampTemplate.txt, which is the template for the
     time stamps that Project Manager creates. This template also contains '{0}', which turns into the datetime string.
+    
+    As an additional note, after you change a template file, you must restart Project Manager for the change to be picked
+    up.
     
  ###########################################################################################################################
  
