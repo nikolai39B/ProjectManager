@@ -69,38 +69,6 @@ namespace ProjectManager
             g_EditButtons.Visibility = System.Windows.Visibility.Visible;
         }
 
-        //----------------//
-        // Helper Methods //
-        //----------------//
-        /// <summary>
-        /// Allows the user to select a file using the default windows dialog.
-        /// </summary>
-        /// <param name="defaultExt">The default extention for the file.</param>
-        /// <param name="filter">The filter for the types of files allowed.</param>
-        /// <returns>The selected file, or null if no file selected.</returns>
-        private string GetFileWithWindowsDialog(string defaultExt, string filter, string initialDirectory = null)
-        {
-            // Init the dialog
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-            dlg.DefaultExt = defaultExt;
-            dlg.Filter = filter;
-            if (initialDirectory != null)
-            {
-                dlg.InitialDirectory = initialDirectory;   
-            }
-
-            // Show the dialog and handle the result
-            Nullable<bool> result = dlg.ShowDialog();
-            if (result == true)
-            {
-                return dlg.FileName;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
         /// <summary>
         /// Adds the given file to the UI and backing fields.
         /// </summary>
@@ -366,7 +334,7 @@ namespace ProjectManager
                 }
             }
 
-            string file = GetFileWithWindowsDialog(".*", "All files (*.*)|*.*", initialDirectory);
+            string file = ProjectFileInterface.GetFileWithWindowsDialog(".*", "All files (*.*)|*.*", initialDirectory);
             if (file != null)
             { 
                 ApplyNewFileToWindow(file);
@@ -394,7 +362,7 @@ namespace ProjectManager
                 }
             }
 
-            string file = GetFileWithWindowsDialog(".*", "All files (*.*)|*.*", initialDirectory);
+            string file = ProjectFileInterface.GetFileWithWindowsDialog(".*", "All files (*.*)|*.*", initialDirectory);
             if (file != null)
             {
                 ApplyNewProgramToOpenToWindow(file);

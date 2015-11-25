@@ -16,12 +16,32 @@ namespace ProjectManager
             CompletedLogs = completedLogs != null ? completedLogs : new List<ProjectLog>();
             IncompleteLog = incompleteLog;
             Files = files != null ? files : new List<ProjectFile>();
-            ProjectFileInterface.CreateFilesForProject(this, false);
         }
 
         //------------------//
         // External Methods //
         //------------------//
+        /// <summary>
+        /// Finishes this project's incomplete log if possible.
+        /// </summary>
+        public void FinishIncompleteLog()
+        {
+            ProjectLog logToFinish = IncompleteLog;
+
+            if (logToFinish == null)
+            {
+                ErrorLogger.AddLog(string.Format("Project '{0}' has no incomplete log to finish.", Name), ErrorSeverity.LOW);
+                return;
+            }
+
+            // End the log
+            logToFinish.End = DateTime.Now;
+
+            // Update the references
+            CompletedLogs.Add(logToFinish);
+            IncompleteLog = null;
+        }
+
         /// <summary>
         /// Sorts the project's completed entries by start time (newest first).
         /// </summary>

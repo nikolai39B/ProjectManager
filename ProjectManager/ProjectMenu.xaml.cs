@@ -141,23 +141,17 @@ namespace ProjectManager
         /// <summary>
         /// Finished the given log by adding the end time and updating the project references.
         /// </summary>
-        /// <param name="log">The log to finish.</param>
-        private void FinishLog(ProjectLog log)
+        private void FinishCurrentIncompleteLog()
         {
-            if (log == null)
-            {
-                ErrorLogger.AddLog("Cannot finish a null log.", ErrorSeverity.HIGH);
-                return;
-            }
-
-            // End the log
-            log.End = DateTime.Now;
-
-            // Add the log to the project
-            AddCompleteLogToProject(log);
+            // Finish the log and sort the entries
+            CurrentProject.FinishIncompleteLog();
+            CurrentProject.SortCompletedEntries();
 
             // Refresh the UI
             RefreshLogsOnUI();
+
+            // Update the backing file
+            ProjectFileInterface.WriteProjectLogsToFile(CurrentProject);
         }
 
         /// <summary>
@@ -176,6 +170,9 @@ namespace ProjectManager
 
             // Add the reference in the project
             CurrentProject.IncompleteLog = log;
+
+            // Update the backing file
+            ProjectFileInterface.WriteProjectLogsToFile(CurrentProject);
         }
 
         /// <summary>
@@ -191,18 +188,23 @@ namespace ProjectManager
                 return;
             }
 
-            // Remove this log as the current project incomplete log if necessary
+            // If this log is the project's current incomplete log, finish it
             if (CurrentProject.IncompleteLog == log)
             {
-                CurrentProject.IncompleteLog = null;
+                CurrentProject.FinishIncompleteLog();
             }
 
-            // Add and sort the entries if necessary
-            if (!CurrentProject.CompletedLogs.Contains(log))
+            // Otherwise, just add it
+            else if (!CurrentProject.CompletedLogs.Contains(log))
             {
                 CurrentProject.CompletedLogs.Add(log);
-                CurrentProject.SortCompletedEntries();
             }
+
+            // Either way, sort the projects
+            CurrentProject.SortCompletedEntries();
+
+            // Update the backing file
+            ProjectFileInterface.WriteProjectLogsToFile(CurrentProject);
         }
 
         /// <summary>
@@ -217,6 +219,9 @@ namespace ProjectManager
                 CurrentProject.Files.Add(file);
                 CurrentProject.SortFiles();
             }
+
+            // Update the backing file
+            ProjectFileInterface.WriteProjectFilesToFile(CurrentProject);
         }
 
         /// <summary>
@@ -264,7 +269,7 @@ namespace ProjectManager
 
         private void b_FinishLog_Click(object sender, RoutedEventArgs e)
         {
-            FinishLog(CurrentProject.IncompleteLog);
+            FinishCurrentIncompleteLog();
         }
 
         private void b_AddFile_Click(object sender, RoutedEventArgs e)
@@ -350,6 +355,7 @@ namespace ProjectManager
                 if (window.DeleteProject)
                 {
                     ProjectOrganizer.RemoveProject(CurrentProject);
+                    ProjectFileInterface.WriteProjectsToProjectListFile();
                     Window parent = Window.GetWindow(this);
                     parent.Content = new Home();
                     return;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,19 +11,17 @@ namespace ProjectManager
     {
         static UserSettings()
         {
-            // Init the maps
-            InitStringMaps();
-
-            // Set the settings in the class
-            ResetToDefaults();
-            GetSettingsFromFile();
+            // All initialization should be done explicitly by the initialization methods
         }
 
-        /* Procedure for adding another user setting:
+        /* Adding a User Setting
+         * 
+         * For all new settings:
          * - Add the field to store the value at the bottom of this file
-         * - Add the string key for this setting in the settings file
+         * - Add the string key for this setting at the bottom of this file
          * - Add default value in ResetToDefaults()
-         * - Add case for key in GetSettingsFromFile()
+         * - Add handler for key in GetSettingsFromFile()
+         * - Add handler for setting in WriteSettingsToFile() in ProjectFileInterface
          * - Add UI item to set/view the value
          * - Implement the value in the code
          * 
@@ -34,61 +33,148 @@ namespace ProjectManager
         //------------------//
         // External Methods //
         //------------------//
+        /// <summary>
+        /// Run the first part of the UserSettings initialization.
+        /// 
+        /// Depends on the settings file path being known (stored in the Project File Interface).
+        /// 
+        /// Completes the following tasks:
+        /// - initializes the string/enum maps
+        /// - sets the settings to their default values
+        /// - loads the settings from the file
+        /// - parses most settings
+        /// </summary>
+        public static void RunFirstInitialization()
+        {
+            // Initialize the string/enum maps
+            InitStringMaps();
+
+            // Set the settings to their default values
+            ResetToDefaults();
+
+            // Load the settings from the settings file
+            LoadSettingsFromFile();
+        }
+
+        /// <summary>
+        /// Run the second part of the UserSettings initialization.
+        /// 
+        /// Depends on the projects list having already been generated (stored in the Project Organizer).
+        /// 
+        /// Completes the following tasks:
+        /// - parses the hidden projects settings value
+        /// </summary>
+        public static void RunSecondInitialization()
+        {
+            ParseHiddenProjectsSettingString();
+        }
+
+        /// <summary>
+        /// Resets the user settings to their default values.
+        /// </summary>
         public static void ResetToDefaults()
         {
+            // NOTE: None of the default settings should ever rely on other Project Manager classes
             ProjectSortingMethod = SortingMethod.NEW_FIRST;
+
             HiddenProjects = new List<Project>();
+            hiddenProjectsSettingValue = "";
+
             SummarySortByTime = false;
             SummaryIgnoreHiddenProjects = false;
+
             DebugModeOn = false;
+
+            UseCustomTemplates = true;
+            AddTimestampToNotes = true;
+            DisplayIncompleteLogWarning = false;
+
+            DataDirectory = Path.Combine(Environment.CurrentDirectory, "data");
         }
 
         /// <summary>
         /// Sets the user settings based on the values stored in the settings file.
         /// </summary>
-        public static void GetSettingsFromFile()
+        public static void LoadSettingsFromFile()
         {
-            Dictionary<string, string> settings = ProjectFileInterface.GetAllSettingsFromFile();
+            // Get the settings
+            Dictionary<string, string> settings = ProjectFileInterface.GetSettingsFromFile();
 
-            // Try to parse the values
-            foreach (var pair in settings)
+            // Debug mode must be first, so ErrorLogger knows how to handle errors.
+            // Before this point, ErrorLogger assumes that debug mode is off even if
+            // the user really wanted it on.
+            if (settings.ContainsKey(debugModeOnKey))
             {
-                switch (pair.Key)
+                DebugModeOn = settings[debugModeOnKey].ToLower() == "true";
+
+                // If errors occurred before now and we just turned debug mode on, notify the user
+                if (DebugModeOn && ErrorLogger.ErrorsOccured)
                 {
-                    case sortingMethodKey:
-                        // Try to get the setting value from the string
-                        if (stringToSortingMethod.Keys.Contains(pair.Value))
-                        {
-                            ProjectSortingMethod = stringToSortingMethod[pair.Value];
-                        }
-                        else
-                        {
-                            ErrorLogger.AddLog(string.Format("Could not parse value '{0}' for setting '{1}'.", pair.Value, pair.Key), ErrorSeverity.MODERATE);
-                        }
-                        break;
-
-                    case hiddenProjectsKey:
-                        HandleHiddenProjectsSettingString(pair.Value);
-                        break;
-
-                    case summarySortByTimeKey:
-                        SummarySortByTime = pair.Value.ToLower() == "true";
-                        break;
-
-                    case summaryIgnoreHiddenProjectsKey:
-                        SummaryIgnoreHiddenProjects = pair.Value.ToLower() == "true";
-                        break;
-
-                    case debugModeOnKey:
-                        DebugModeOn = pair.Value.ToLower() == "true";
-                        break;
-
-                    default:
-                        // Log if we didn't recognize a setting
-                        ErrorLogger.AddLog(string.Format("Could not parse setting '{0}' with value '{1}'.", pair.Key, pair.Value), ErrorSeverity.WARNING);
-                        return;
+                    ErrorLogger.AddLog("Errors occurred before debug mode was enabled. Please view the log file for details.", ErrorSeverity.WARNING);
                 }
             }
+
+            // Now set up the directories, because a lot of things depend on them
+            if (settings.ContainsKey(dataDirectoryKey))
+            {
+                string newDataDir = settings[dataDirectoryKey];
+                if (Directory.Exists(newDataDir))
+                { 
+                    DataDirectory = newDataDir;
+                }
+                else
+                {
+                    ErrorLogger.AddLog(string.Format(
+                        "Directory {0} does not exist. Cannot get data from this directory. Leaving data directory as default.", newDataDir), ErrorSeverity.HIGH);
+                }
+            }
+
+            // Project sorting
+            if (settings.ContainsKey(sortingMethodKey))
+            {
+                string sortingMethodString = settings[sortingMethodKey];
+                if (stringToSortingMethod.ContainsKey(sortingMethodString))
+                {
+                    ProjectSortingMethod = stringToSortingMethod[sortingMethodString];
+                }
+                else
+                {
+                    ErrorLogger.AddLog(string.Format(
+                        "No sorting method found for string '{0}'. Leaving sorting method as default.", sortingMethodString), ErrorSeverity.MODERATE);
+                }
+            }
+
+            // Hidden projects
+            if (settings.ContainsKey(hiddenProjectsKey))
+            {
+                hiddenProjectsSettingValue = settings[hiddenProjectsKey];
+            }
+
+            // Summary
+            if (settings.ContainsKey(summarySortByTimeKey))
+            {
+                SummarySortByTime = settings[summarySortByTimeKey].ToLower() == "true";
+            }
+            if (settings.ContainsKey(summaryIgnoreHiddenProjectsKey))
+            {
+                SummaryIgnoreHiddenProjects = settings[summaryIgnoreHiddenProjectsKey].ToLower() == "true";
+            }
+
+            // Data
+            if (settings.ContainsKey(useCustomTemplatesKey))
+            {
+                UseCustomTemplates = settings[useCustomTemplatesKey].ToLower() == "true";
+            }
+            if (settings.ContainsKey(addTimestampToNotesKey))
+            {
+                AddTimestampToNotes = settings[addTimestampToNotesKey].ToLower() == "true";
+            }
+            if (settings.ContainsKey(displayIncompleteLogWarningKey))
+            {
+                DisplayIncompleteLogWarning = settings[displayIncompleteLogWarningKey].ToLower() == "true";
+            }
+
+            // TODO: check for any keys that aren't recognized
         }
 
         /// <summary>
@@ -136,12 +222,12 @@ namespace ProjectManager
         }
 
         /// <summary>
-        /// Handles the line from the settings file corresponding to the hidden projects setting.
+        /// Parses the line from the settings file corresponding to the hidden projects setting.
         /// </summary>
         /// <param name="settingValue">The value for the setting.</param>
-        private static void HandleHiddenProjectsSettingString(string settingValue)
-        {            
-            List<string> projectIdsToHide = settingValue.Split('|').ToList();
+        private static void ParseHiddenProjectsSettingString()
+        {
+            List<string> projectIdsToHide = hiddenProjectsSettingValue.Split('|').ToList();
 
             // If we have no projects to hide, return
             if (projectIdsToHide.Count == 1 && projectIdsToHide[0] == "")
@@ -190,6 +276,7 @@ namespace ProjectManager
         }
 
         // Project Hiding
+        private static string hiddenProjectsSettingValue;
         public static List<Project> HiddenProjects { get; set; }
 
         // Summary Options
@@ -199,12 +286,28 @@ namespace ProjectManager
         // Error Options
         public static bool DebugModeOn { get; set; }
 
+        // Data Options
+        public static bool UseCustomTemplates { get; set; }
+        public static bool AddTimestampToNotes { get; set; }
+        public static bool DisplayIncompleteLogWarning { get; set; }
+
+        public static string DataDirectory { get; set; }
+
         // String Keys
         public const string sortingMethodKey = "sorting_method";
+
         public const string hiddenProjectsKey = "hidden_projects";
+
         public const string summarySortByTimeKey = "summary_sort_by_time";
         public const string summaryIgnoreHiddenProjectsKey = "summary_ignore_hidden_projects";
+
         public const string debugModeOnKey = "debug_mode_on";
+
+        public const string useCustomTemplatesKey = "use_custom_templates";
+        public const string addTimestampToNotesKey = "add_timestamp_to_notes";
+        public const string displayIncompleteLogWarningKey = "display_incomplete_log_warning";
+
+        public const string dataDirectoryKey = "data_directory";
 
         // String Maps
         private static Dictionary<SortingMethod, string> sortingMethodToString;

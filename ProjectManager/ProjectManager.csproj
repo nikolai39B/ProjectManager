@@ -100,6 +100,7 @@
     <Compile Include="Dialogs\EditProjectDialog.xaml.cs">
       <DependentUpon>EditProjectDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utilities\ProgramInitializer.cs" />
     <Compile Include="UI Rows\HideProjectRow.xaml.cs">
       <DependentUpon>HideProjectRow.xaml</DependentUpon>
     </Compile>

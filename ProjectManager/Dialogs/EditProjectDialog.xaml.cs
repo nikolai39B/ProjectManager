@@ -65,7 +65,7 @@ namespace ProjectManager
             // Update the project data and files
             CurrentProject.Name = newName;
             ProjectFileInterface.UpdateFilenamesForNewProjectName(CurrentProject, oldName);
-            ProjectFileInterface.WriteProjectsToListFile(ProjectOrganizer.Projects, false, false, false);
+            ProjectFileInterface.WriteProjectsToProjectListFile();
 
             // Log for UI change (caller should refresh the UI to match the new name)
             RefreshProjectNameOnUI = true;

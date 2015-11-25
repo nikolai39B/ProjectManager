@@ -12,20 +12,14 @@ namespace ProjectManager
     {
         static ErrorLogger()
         {
+            // IMPORTANT: The ErrorLogger cannot get called before the executable relative directory structure
+            // is verified in ProjectFileInterface.RunFirstInitialization().
+
             ErrorsOccured = false;
 
-            // Get the full path for the log file and create it if necessary
-            errorLogFilename = Path.Combine(Environment.CurrentDirectory, errorLogFilename);
-
-            // Create all the necessary directories
-            foreach (var dir in requiredDirectories)
-            {
-                string fullDir = Path.Combine(Environment.CurrentDirectory, dir);
-                if (!Directory.Exists(fullDir))
-                {
-                    Directory.CreateDirectory(fullDir);
-                }
-            }
+            // Get the full path for the error log file
+            string currDir = Environment.CurrentDirectory;
+            errorLogFilename = Path.Combine(currDir, errorLogFilename);
 
             // Make sure the error log file exists. Create it if necessary.
             if (!File.Exists(errorLogFilename))
@@ -98,7 +92,7 @@ namespace ProjectManager
                 {
                     NotificationDialog window = new NotificationDialog("Error", 
                         string.Format("This program experienced an error:\n{0}", log));
-                    window.ShowDialog();
+                    window.Show();
                 }
             }
             catch (IOException e)
@@ -108,34 +102,17 @@ namespace ProjectManager
                     string.Format("This program encountered an error, and the error couldn't get logged.\n\nInitial error:\n{0}\n\nError log write error:\n{1}\n\n" + 
                         "If this problem persists, please contact us and let us know that it's happening.", log, e.Message));
 
-                window.ShowDialog();
-            }
-        }
-
-        /// <summary>
-        /// Clears all error logs from the error log file.
-        /// </summary>
-        public static void ClearAllLogs()
-        {
-            try
-            {
-                File.WriteAllText(errorLogFilename, "");
-            }
-            catch (IOException e)
-            {
-                AddLog(string.Format("Could not clear error logs:\n{0}", e.Message), ErrorSeverity.LOW);
+                window.Show();
             }
         }
 
         //------//
         // Data //
         //------//
-        private static string errorLogFilename = "data\\errorLogs.txt";
+        private static string errorLogFilename = "runtime_information\\errorLogs.txt";
         public static string ErrorLogFilename { get { return errorLogFilename; } }
 
         public static bool ErrorsOccured { get; private set; }
-
-        private static string[] requiredDirectories = new string[] { "data" };
 
         private static Dictionary<ErrorSeverity, string> errorSeverityToStringMap;
     }

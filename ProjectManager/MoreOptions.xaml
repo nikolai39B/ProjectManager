@@ -25,30 +25,73 @@
                 <RadioButton Grid.Column="3" HorizontalAlignment="Center" Name="rb_NameZToA" Content="Name (Z to A)" />
             </Grid>
 
-            <!-- Project Management -->
-            <TextBlock Margin="0 0 0 5" Style="{StaticResource tbl_Label}" Text="Manage Projects" />
+            <!-- Project Management and Error Handling -->
             <Grid Margin="0 0 0 10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="0.5*" />
                     <ColumnDefinition Width="0.5*" />
                 </Grid.ColumnDefinitions>
-                <Button Click="b_HideProjects_Click" Content="Hide Projects" Grid.Column="0" Name="b_HideProjects" Width="120" />
-                <Button Click="b_ClearProjects_Click" Content="Clear Projects" Grid.Column="1" Name="b_ClearProjects" Width="120" />
+
+                <!-- Project Management -->
+                <StackPanel Grid.Column="0">
+                    <TextBlock Margin="0 0 0 5" Style="{StaticResource tbl_Label}" Text="Manage Projects" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.5*" />
+                            <ColumnDefinition Width="0.5*" />
+                        </Grid.ColumnDefinitions>
+                        <Button Click="b_HideProjects_Click" Content="Hide Projects" Grid.Column="0" Name="b_HideProjects" Width="100" />
+                        <Button Click="b_ClearProjects_Click" Content="Clear Projects" Grid.Column="1" Name="b_ClearProjects" Width="100" />
+                    </Grid>
+                </StackPanel>
+
+                <!-- Error Handling -->
+                <StackPanel Grid.Column="1">
+                    <TextBlock Margin="0 0 0 5" Style="{StaticResource tbl_Label}" Text="Error Handling" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.5*" />
+                            <ColumnDefinition Width="0.5*" />
+                        </Grid.ColumnDefinitions>
+                        <CheckBox Content="Debug Mode" HorizontalAlignment="Center" Name="cb_DebugMode" VerticalAlignment="Center"/>
+                        <Button Click="b_OpenErrorLog_Click" Content="Open Error Log" Grid.Column="1" Name="b_OpenErrorLog" Width="100" />
+                    </Grid>
+                </StackPanel>
             </Grid>
 
-            <!-- Error Handling -->
-            <TextBlock Margin="0 0 0 5" Style="{StaticResource tbl_Label}" Text="Error Handling" />
-            <Grid Margin="0 0 0 10">
+            <!-- Data -->
+            <TextBlock Margin="0 0 0 5" Style="{StaticResource tbl_Label}" Text="Data" />
+
+            <!-- Templates, Timestamping, and Incomplete Log Warning -->
+            <Grid Margin="0 0 0 5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="0.33*" />
                     <ColumnDefinition Width="0.33*" />
                     <ColumnDefinition Width="0.33*" />
                 </Grid.ColumnDefinitions>
-                <CheckBox Content="Debug Mode" HorizontalAlignment="Center" Name="cb_DebugMode" VerticalAlignment="Center"/>
-                <Button Click="b_OpenErrorLog_Click" Content="Open Error Log" Grid.Column="1" Name="b_OpenErrorLog" Width="120" />
-                <Button Click="b_ClearErrorLog_Click" Content="Clear Error Log" Grid.Column="2" Name="b_ClearErrorLog" Width="120" />
+
+                <CheckBox Content="Use Custom Templates" Grid.Column="0" HorizontalAlignment="Center" Name="cb_CustomTemplates" VerticalAlignment="Center" />
+                <CheckBox Content="Add Timestamp to Notes" Grid.Column="1" HorizontalAlignment="Center" Name="cb_TimestampNotes" VerticalAlignment="Center" />
+                <CheckBox Content="Incomplete Log Warning" Grid.Column="2" HorizontalAlignment="Center" Name="cb_IncompleteLogWarning" VerticalAlignment="Center" />
             </Grid>
 
+            <Grid Margin="0 0 0 10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.75*" />
+                    <ColumnDefinition Width="0.25*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Data Directory -->
+                <StackPanel Grid.Column="0" Margin="10 0 0 0" Orientation="Horizontal">
+                    <TextBlock Text="Data Folder" Margin="0 0 10 0" />
+                    <Button Click="b_BrowseForDataDirectory_Click" Content="Browse" Margin="0 0 10 0" Name="b_BrowseForDataDirectory" Width="100"/>
+                    <TextBlock Name="tbl_DataDirectory" Text="Data directory..." />
+                </StackPanel>
+
+                <!-- Backup Data -->
+                <Button Click="b_BackupData_Click" Content="Backup Data" Grid.Column="1" Name="b_BackupData" Width="100"/>
+
+            </Grid>
         </StackPanel>
 
         <!-- Utility Buttons -->

@@ -28,7 +28,6 @@ namespace ProjectManager
         {
             InitializeComponent();
             RefreshProjectsOnUI();
-            //PopulateProjectsStackPanels();
         }
 
         //------------------//
@@ -54,6 +53,7 @@ namespace ProjectManager
         private void AddProject(string projectName)
         {
             Project newProject = ProjectOrganizer.CreateNewProject(projectName);
+            ProjectFileInterface.WriteProjectsToProjectListFile();
             GoToProjectMenu(newProject);
         }
 
@@ -141,7 +141,7 @@ namespace ProjectManager
         private void b_Quit_Click(object sender, RoutedEventArgs e)
         {
             //ProjectFileInterface.WriteProjectsToListFile(ProjectOrganizer.Projects);
-            Application.Current.Shutdown(0);                    
+            Window.GetWindow(this).Close();                  
         }
     }
 }

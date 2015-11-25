@@ -1,5 +1,10 @@
 # User data
 ProjectManager/bin/Debug/data
+ProjectManager/bin/Debug/runtime_information/errorLogs.txt
+ProjectManager/bin/Debug/runtime_information/settings.txt
+
+# Templates
+ProjectManager/bin/Debug/runtime_information/templates
 
 # Launcher bat (requires hardcoded info)
 ProjectManager/bin/Debug/launchManager.bat

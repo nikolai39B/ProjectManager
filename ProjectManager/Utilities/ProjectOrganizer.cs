@@ -10,17 +10,30 @@ namespace ProjectManager
     {
         static ProjectOrganizer()
         {
-            LoadAllProjects();
-        }
-
-        public static void LoadAllProjects()
-        {
-            Projects = ProjectFileInterface.GetAllProjectsFromFiles();
+            // All initialization should be done explicitly by the initialization method
         }
 
         //------------------//
         // External Methods //
         //------------------//
+        /// <summary>
+        /// Run the ProjectOrganizer initialization.
+        /// 
+        /// Depends on Project File Interface being fully initialized.
+        /// 
+        /// Completes the following tasks:
+        /// - loads all projects from the project list file
+        /// </summary>
+        public static void RunInitialization()
+        {
+            LoadAllProjects();
+        }
+
+        public static void LoadAllProjects()
+        {
+            Projects = ProjectFileInterface.GetProjectListFromFile();
+        }
+
         /// <summary>
         /// Creates a new project with the given name.
         /// </summary>
@@ -31,6 +44,7 @@ namespace ProjectManager
             // Get the project's new id and create it
             int projectId = ProjectFileInterface.RequestProjectId();
             Project newProject = new Project(projectId, projectName);
+            ProjectFileInterface.CreateFilesForProject(newProject, false);
 
             // Add a reference to the new project and return
             Projects.Add(newProject);
@@ -120,7 +134,9 @@ namespace ProjectManager
                     break;
 
                 default:
-                    throw new ArgumentException(string.Format("Invalid sorting method {0} given. Cannot sort.", method));
+                    ErrorLogger.AddLog(string.Format("Invalid sorting method {0} given. Cannot sort.", method), ErrorSeverity.MODERATE);
+                    sortedProjects = projects;
+                    break;
             }
 
             return sortedProjects;

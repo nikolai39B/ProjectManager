@@ -32,7 +32,15 @@ namespace ProjectManager
         //---------------//
         private void b_OK_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = true;
+            try
+            {
+                DialogResult = true;
+            }
+            catch (InvalidOperationException)
+            {
+                // If setting dialog result to true failed, this dialog was opened using Show() instead of ShowDialog()
+                this.Close();
+            }
         }
     }
 }
